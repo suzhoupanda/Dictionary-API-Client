@@ -62,7 +62,7 @@ enum ValidSortOption: String{
 
 enum OxfordAPIEndpoint: String{
     
-    case entries, inflections, translations, wordlist
+    case entries, inflections, search, translations, wordlist, utility
     
     case stats_word_frequency = "stats/frequency/word"
     case stats_words_frequency = "stats/frequency/words"
@@ -384,7 +384,10 @@ enum OxfordAPIEndpoint: String{
             return Set([.collate([]),.sort([]),.minFrequency(0),.maxFrequency(10000),.minNormalizedFrequency(0),.maxNormalizedFrequency(10000),.wordforms([]),.trueCase([]),.lemma([]),.lexicalCategory([]),.grammaticalFeatures([])]).union(resultLimitationFilters)
         case .stats_ngrams_frequency:
             return Set([.minDocumentFrequency(0),.maxDocumentFrequency(10000),.minFrequency(0),.maxFrequency(10000),.contains([]),.tokens([])]).union(resultLimitationFilters)
-      
+        case .search:
+            return Set([])
+        case .utility:
+            return Set([])
         }
     }
 }

@@ -68,7 +68,7 @@ class ViewController: UIViewController {
         
             OxfordAPIClient.sharedClient.downloadExampleSentencesJSONData(forWord: "Love")
         
-       
+        OxfordAPIClient.sharedClient.downloadWordlistJSONDataWithValidation(forFilters: nil)
         
     }
     

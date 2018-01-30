@@ -23,6 +23,7 @@ struct OxfordAPIRequest{
     private var language: OxfordAPILanguage = .English
     private var filters: [OxfordAPIEndpoint.OxfordAPIFilter]?
     
+    private var hasRequestedExampleSentencesForWord = false
     private var hasRequestedSynonyms: Bool = false
     private var hasRequestAntonyms: Bool = false
     private var dictionaryEntryFilter: OxfordAPIEndpoint.DictionaryEntryFilter = OxfordAPIEndpoint.DictionaryEntryFilter.none
@@ -167,6 +168,8 @@ struct OxfordAPIRequest{
         self.hasRequestAntonyms = false
     }
     
+    
+    
     init(withWord queryWord: String, hasRequestedAntonymsQuery: Bool, hasRequestedSynonymsQuery: Bool, forLanguage queryLanguage: OxfordAPILanguage = .English){
         
         self.endpoint = OxfordAPIEndpoint.entries
@@ -176,6 +179,17 @@ struct OxfordAPIRequest{
         
         self.hasRequestedSynonyms = hasRequestedSynonymsQuery
         self.hasRequestAntonyms = hasRequestedAntonymsQuery
+    }
+    
+    init(withWord queryWord: String, hasRequestedExampleSentences: Bool = true, forLanguage queryLanguage: OxfordAPILanguage = .English){
+        
+        self.endpoint = OxfordAPIEndpoint.entries
+        self.word = queryWord
+        self.language = OxfordAPILanguage.English
+        self.filters = nil
+        
+        self.hasRequestedSynonyms = false
+        self.hasRequestAntonyms = false
     }
     
 
@@ -268,24 +282,7 @@ struct OxfordAPIRequest{
         return request
     }
     
-    private func getProcessedWord() -> String{
-        
-        //Declare mutable, local version of word parameter
-        var word_id = self.word
-        
-        //Make the word lowercased
-        word_id = word_id.lowercased()
-        
-        //Add percent encoding to the query parameter
-        let percentEncoded_word_id = word_id.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
-        
-        word_id = percentEncoded_word_id == nil ? word_id : percentEncoded_word_id!
-        
-        //Replace spaces with underscores
-        word_id = word_id.replacingOccurrences(of: " ", with: "_")
-        
-        return word_id
-    }
+ 
     
     private func hasValidFilters(filters: [OxfordAPIEndpoint.OxfordAPIFilter]?,forEndpoint endpoint: OxfordAPIEndpoint) -> Bool {
         
@@ -312,24 +309,10 @@ struct OxfordAPIRequest{
         
     }
     
-    private func getLexistatsURLString() -> String{
-        
-        let baseURLString = OxfordAPIRequest.baseURLString.appending("/")
-        
-        let endpointStr = self.endpoint.rawValue.appending("/")
-        
-        let endpointURLString = baseURLString.appending(endpointStr)
-        
-        if(self.endpoint == .stats_ngrams_frequency){
-            
-            let languageStr = self.language.rawValue.appending("/")
-            
-            var languageURLString = endpointURLString.appending(languageStr)
+  
 
-        }
-        
-    }
-    
+
+   
     
     private func getURLString() -> String{
         
@@ -340,110 +323,92 @@ struct OxfordAPIRequest{
         }
         
         let baseURLString = OxfordAPIRequest.baseURLString.appending("/")
-        
-        let endpointStr = self.endpoint.rawValue.appending("/")
-        
-        let endpointURLString = baseURLString.appending(endpointStr)
-        
-        let languageStr = self.language.rawValue.appending("/")
-        
-        var languageURLString = endpointURLString.appending(languageStr)
-        
+
         
         if(self.endpoint == .wordlist){
             
-            if(self.filters == nil){
+            
+            var urlStr = getURLStringFromAppendingEndpoingSpecifier(relativeToURLString: baseURLString)
+            
+            urlStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: urlStr)
+            
+            
+            if let allFilters = self.filters{
+                addFilters(filters: allFilters, toURLString: &urlStr)
+            }
+            
+            return urlStr
+            
+        } else if (self.endpoint == .entries) {
+            
+            /** Makes a request to the Sentence Dictionary API **/
+            if(self.hasRequestedExampleSentencesForWord){
                 
-                /** Remove the final slash **/
-                languageURLString.removeLast()
+                var urlStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: baseURLString)
                 
-                return languageURLString
+                urlStr = getURLStringFromAppendingQueryWord(relativeToURLString: urlStr)
                 
+                return urlStr.appending("sentences")
+
+
+                /** Makes a request to the Dictionary API **/
             } else {
-                //TODO: Add filters for register,domain,region,etc
+                var urlStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: baseURLString)
                 
-                let allFilters = self.filters!
+                urlStr = getURLStringFromAppendingQueryWord(relativeToURLString: urlStr)
                 
-                addFilters(filters: allFilters, toURLString: &languageURLString)
+                if let allFilters = self.filters{
+                    
+                    addFilters(filters: allFilters, toURLString: &urlStr)
+                    
+        
+                }
                 
-                return languageURLString
+                return urlStr
 
             }
             
-        } else {
+        } else if (self.endpoint == .inflections){
             
-            let wordStr = self.getProcessedWord().appending("/")
+            var urlStr = getURLStringFromAppendingEndpoingSpecifier(relativeToURLString: baseURLString)
             
-            var wordURLString = languageURLString.appending(wordStr)
+            urlStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: urlStr)
             
-            if(self.endpoint == .entries){
+            urlStr = getURLStringFromAppendingQueryWord(relativeToURLString: urlStr)
+            
+            if let allFilters = self.filters{
                 
-                if(hasRequestAntonyms || hasRequestedSynonyms){
-                    
-                    if(hasRequestedSynonyms && hasRequestAntonyms){
-                        
-                        let finalURLString = wordURLString.appending("synonyms;antonyms")
-                        
-                        return finalURLString
-                        
-                    } else if(hasRequestedSynonyms){
-                        
-                        let finalURLString = wordURLString.appending("synonyms")
-                        
-                        return finalURLString
-                        
-                    } else if(hasRequestAntonyms){
-                        
-                        let finalURLString = wordURLString.appending("antonyms")
-                        
-                        return finalURLString
-                    }
-                    
-                } else if(self.dictionaryEntryFilter != .none) {
-                    
+                addFilters(filters: allFilters, toURLString: &urlStr)
                 
-                    let finalURLString = wordURLString.appending(dictionaryEntryFilter.rawValue)
-                    
-                    return finalURLString
-                    
-                } else if(self.filters != nil) {
-                    //Add filters for dictionary entries request for the given word
-                    
-                    let allFilters = self.filters!
-                    
-                    addFilters(filters: allFilters, toURLString: &wordURLString)
-                   
-                    return wordURLString
-                     
-                    
-                    
-                } else {
-                    
-                    wordURLString.removeLast()
-                    
-                    return wordURLString
-                    
-                }
                 
-            } else {
-                
-                if(self.filters != nil){
-                    
-                    let allFilters = self.filters!
-                    
-                    addFilters(filters: allFilters, toURLString: &wordURLString)
-                    
-                    return wordURLString
-                }
             }
             
+            return urlStr
+            
+            
+            
+        } else if (self.endpoint == .search){
+            
+            //TODO: Not yet implemented
+
+        } else if (self.endpoint == .translations){
+            
+            //TODO: Not yet implemented
+
+        } else if(self.endpoint == .utility){
+            
+            //TODO: Not yet implemented
         }
+        
         
         return String()
     }
+        
     
     
-
+    
+    //MARK: ******** Helper Methods for Building API Request URL String
+    
     private func addFilters(filters: [OxfordAPIEndpoint.OxfordAPIFilter], toURLString urlString: inout String){
 
         
@@ -466,4 +431,199 @@ struct OxfordAPIRequest{
         }while(urlString.last! == ";")
         
     }
+    
+    
+    private func getLexistatsURLString() -> String{
+        
+        let baseURLString = OxfordAPIRequest.baseURLString.appending("/")
+        
+        let endpointStr = self.endpoint.rawValue.appending("/")
+        
+        var nextStr = baseURLString.appending(endpointStr)
+        
+        if(self.endpoint == .stats_ngrams_frequency){
+            
+            return getNGramURLString(forEndpointString: nextStr)
+            
+        } else  {
+            
+            if let lemmas = self.lemmas{
+                
+                appendStringArrayElementsToURLString(fromStringArray: lemmas, toCurrentURLString: &nextStr)
+                
+            }
+            
+            if let wordforms = self.wordforms{
+                
+                appendStringArrayElementsToURLString(fromStringArray: wordforms, toCurrentURLString: &nextStr)
+                
+            }
+            
+            if let trueCases = self.trueCases{
+                
+                appendStringArrayElementsToURLString(fromStringArray: trueCases, toCurrentURLString: &nextStr)
+                
+            }
+            
+            if(self.endpoint == .stats_words_frequency){
+                
+                if let collateOptions = self.collateOptions{
+                    
+                    let stringArray = collateOptions.map({$0.rawValue})
+                    appendStringArrayElementsToURLString(fromStringArray: stringArray, toCurrentURLString: &nextStr)
+                }
+                
+                if let sortOptions = self.sortOptions{
+                    let stringArray = sortOptions.map({$0.rawValue})
+                    appendStringArrayElementsToURLString(fromStringArray: stringArray, toCurrentURLString: &nextStr)
+                }
+            }
+            
+            if let allFilters = self.filters{
+                
+                addFilters(filters: allFilters, toURLString: &nextStr)
+
+            }
+            
+            
+            return nextStr
+        }
+    }
+    
+    
+    
+    private func getNGramURLString(forEndpointString endpointURLString: String) -> String{
+        
+        let ngramStr = "\(self.ngram_size.rawValue)".appending("/")
+        
+        var nextStr = endpointURLString.appending(ngramStr)
+        
+        if let filterTokens = self.filterTokens{
+            
+            appendStringArrayElementsToURLString(fromStringArray: filterTokens, toCurrentURLString: &nextStr)
+       
+            
+        }
+        
+        if let otherTokens = self.otherContainedTokens{
+            
+            appendStringArrayElementsToURLString(fromStringArray: otherTokens, toCurrentURLString: &nextStr)
+
+        }
+        
+        nextStr = nextStr.appending("\(self.tokenReturnFormat.rawValue);")
+        
+        let shouldIncludePunctuationFlagStr = self.shouldLookUpPunctuationForNGrams ? "true" : "false"
+        
+        nextStr = nextStr.appending("\(shouldIncludePunctuationFlagStr);")
+        
+        
+        
+        if let allFilters = self.filters{
+            
+            addFilters(filters: allFilters, toURLString: &nextStr)
+            
+        }
+        
+        return nextStr
+    }
+    
+    private func appendStringArrayElementsToURLString(fromStringArray stringArray: [String],toCurrentURLString urlString: inout String){
+        
+        var concatenatedString = stringArray.reduce(String(), { $0.appending("\($1),")})
+        concatenatedString.removeLast()
+        concatenatedString.append(";")
+        
+        urlString = urlString.appending(concatenatedString)
+    }
+    
+    
+    //MARK: *****   Helper Functions for Building URLRequest String
+    
+    private func getURLStringFromAppendingQueryWord(relativeToURLString urlString: String) -> String{
+        
+        let encodedQueryWord = getEncodedQueryWord()
+        
+        return urlString.appending("\(encodedQueryWord)/")
+
+        
+    }
+    
+    private func getURLStringFromAppendingLanguageSpecifier(relativeToURLString urlString: String) -> String{
+        
+        
+        return urlString.appending("\(self.language.rawValue)/")
+    }
+    
+    private func getURLStringFromAppendingEndpoingSpecifier(relativeToURLString urlString: String) -> String{
+        
+        
+        return urlString.appending("\(self.endpoint.rawValue)/")
+        
+    }
+    
+    
+    
+    /** Appends the Thesaurus query parameters to the ULR string; **/
+    
+    private func getURLStringFromAppendingThesaurusQueryParameters(relativeToURLString urlString: String) -> String{
+        
+        if(hasRequestAntonyms || hasRequestedSynonyms){
+            
+            if(hasRequestedSynonyms && hasRequestAntonyms){
+                
+                let finalURLString = urlString.appending("synonyms;antonyms")
+                
+                return finalURLString
+                
+            } else if(hasRequestedSynonyms){
+                
+                let finalURLString = urlString.appending("synonyms")
+                
+                return finalURLString
+                
+            } else if(hasRequestAntonyms){
+                
+                let finalURLString = urlString.appending("antonyms")
+                
+                return finalURLString
+            }
+            
+            
+        }
+        
+        return String()
+    }
+    
+    //MARK: ****** Helper Function for Encoding Query Parameters
+    
+    private func getEncodedQueryWord() -> String{
+        
+        //Declare mutable, local version of word parameter
+        return getEncodedString(fromRawString: self.word)
+    }
+    
+    private func getEncodedString(fromRawString rawString: String) -> String{
+        
+        //Declare mutable, local version of string parameter
+        var copiedString = rawString
+        
+        //Make the string lowercased
+        copiedString = copiedString.lowercased()
+        
+        //Add percent encoding to the query parameter
+        let percentEncoded_string = copiedString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        
+        copiedString = percentEncoded_string == nil ? copiedString : percentEncoded_string!
+        
+        //Replace spaces with underscores
+        copiedString = copiedString.replacingOccurrences(of: " ", with: "_")
+        
+        return copiedString
+    }
+
+
+    
 }
+
+
