@@ -66,8 +66,7 @@ class ViewController: UIViewController {
 
        /** DictionaryAPIClient.getJSONDictionaryForWord(word: "love") **/
         
-        MWAPIClient.sharedClient.downloadXMLData(forHeadWord: "love", hasRequestThesaurusAPI: false)
-        
+            OxfordAPIClient.sharedClient.downloadExampleSentencesJSONData(forWord: "Love")
         
        
         

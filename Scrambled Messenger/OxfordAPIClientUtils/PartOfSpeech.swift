@@ -66,7 +66,7 @@ enum OxfordAPIEndpoint: String{
     
     case stats_word_frequency = "stats/frequency/word"
     case stats_words_frequency = "stats/frequency/words"
-    case stats_ngrams_frequency = "stats/frequency/ngrams/en/nmc/"
+    case stats_ngrams_frequency = "stats/frequency/ngrams/en/nmc"
     
 
     /** These are treated as subdivisions of the dictionary entries endpoint rather than as filters per se **/

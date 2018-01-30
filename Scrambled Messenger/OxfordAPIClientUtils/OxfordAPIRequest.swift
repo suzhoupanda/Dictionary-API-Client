@@ -312,9 +312,32 @@ struct OxfordAPIRequest{
         
     }
     
+    private func getLexistatsURLString() -> String{
+        
+        let baseURLString = OxfordAPIRequest.baseURLString.appending("/")
+        
+        let endpointStr = self.endpoint.rawValue.appending("/")
+        
+        let endpointURLString = baseURLString.appending(endpointStr)
+        
+        if(self.endpoint == .stats_ngrams_frequency){
+            
+            let languageStr = self.language.rawValue.appending("/")
+            
+            var languageURLString = endpointURLString.appending(languageStr)
+
+        }
+        
+    }
+    
     
     private func getURLString() -> String{
         
+        if(self.endpoint == .stats_word_frequency || self.endpoint == .stats_words_frequency || self.endpoint == .stats_ngrams_frequency){
+            
+            return getLexistatsURLString()
+            
+        }
         
         let baseURLString = OxfordAPIRequest.baseURLString.appending("/")
         
