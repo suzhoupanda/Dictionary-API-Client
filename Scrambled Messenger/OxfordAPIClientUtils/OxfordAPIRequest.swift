@@ -246,6 +246,8 @@ struct OxfordAPIRequest{
     }
     
     
+    //TODO: Compare the efficiency and speed of the two URLRequest generators - one that requires validation and the other that doesn't require it
+    
     func generateValidatedURLRequest() throws -> URLRequest{
         
        
@@ -313,8 +315,9 @@ struct OxfordAPIRequest{
 
 
    
+    /** The getURLString method is exposed during development to allow for testing **/
     
-    private func getURLString() -> String{
+     func getURLString() -> String{
         
         if(self.endpoint == .stats_word_frequency || self.endpoint == .stats_words_frequency || self.endpoint == .stats_ngrams_frequency){
             
