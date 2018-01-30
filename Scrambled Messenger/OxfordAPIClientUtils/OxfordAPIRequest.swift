@@ -29,6 +29,8 @@ class OxfordAPIRequest{
      var language: OxfordAPILanguage = .English
      var filters: [OxfordAPIEndpoint.OxfordAPIFilter]?
     
+    var resultLimit = 5000
+    var resultOffset = 0
  
     private var dictionaryEntryFilter: OxfordAPIEndpoint.DictionaryEntryFilter = OxfordAPIEndpoint.DictionaryEntryFilter.none
     
@@ -57,14 +59,7 @@ class OxfordAPIRequest{
     
     
     
-    init(withWord queryWord: String, hasRequestedAntonymsQuery: Bool, hasRequestedSynonymsQuery: Bool, forLanguage queryLanguage: OxfordAPILanguage = .English){
-        
-        self.endpoint = OxfordAPIEndpoint.entries
-        self.word = queryWord
-        self.language = OxfordAPILanguage.English
-        self.filters = nil
-        
-    }
+ 
     
     init(withWord queryWord: String, hasRequestedExampleSentences: Bool = true, forLanguage queryLanguage: OxfordAPILanguage = .English){
         
@@ -112,10 +107,19 @@ class OxfordAPIRequest{
         
     }
     
-    /** Generic default initializers with placeholder values for variables is provided for convenience  **/
+    /** Designated initializers  **/
+    
+    init(withQueryWord queryWord: String, andWithLanguage language: OxfordAPILanguage = OxfordAPILanguage.English){
+        
+        self.endpoint = OxfordAPIEndpoint.entries
+        self.word = queryWord
+        self.language = lanuage
+        self.filters = nil
+    }
+    
     init(){
         self.endpoint = OxfordAPIEndpoint.utility
-        self.word = "love"
+        self.word = String()
         self.language = OxfordAPILanguage.English
         self.filters = nil
     
@@ -295,7 +299,7 @@ class OxfordAPIRequest{
     
     //MARK: *****   Helper Functions for Building URLRequest String
     
-    private func getURLStringFromAppendingQueryWord(relativeToURLString urlString: String) -> String{
+     func getURLStringFromAppendingQueryWord(relativeToURLString urlString: String) -> String{
         
         let encodedQueryWord = getEncodedQueryWord()
         
@@ -310,7 +314,7 @@ class OxfordAPIRequest{
         return urlString.appending("\(self.language.rawValue)/")
     }
     
-    private func getURLStringFromAppendingEndpoingSpecifier(relativeToURLString urlString: String) -> String{
+     func getURLStringFromAppendingEndpointSpecifier(relativeToURLString urlString: String) -> String{
         
         
         return urlString.appending("\(self.endpoint.rawValue)/")

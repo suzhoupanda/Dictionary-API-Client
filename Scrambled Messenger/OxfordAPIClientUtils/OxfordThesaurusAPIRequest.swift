@@ -14,6 +14,16 @@ class OxfordThesaurusAPIRequest: OxfordAPIRequest{
     private var hasRequestedSynonyms: Bool = false
     private var hasRequestAntonyms: Bool = false
     
+    init(withWord queryWord: String, hasRequestedAntonymsQuery: Bool, hasRequestedSynonymsQuery: Bool, forLanguage queryLanguage: OxfordAPILanguage = .English){
+        
+        
+        self.filters = nil
+        self.hasRequestAntonyms = hasRequestAntonyms
+        self.hasRequestedSynonyms = hasRequestAntonyms
+        
+        super.init(withWord: queryWord, andWithLanguage: queryLanguage)
+        
+    }
     /** Appends the Thesaurus query parameters to the ULR string; **/
     
     private func getURLStringFromAppendingThesaurusQueryParameters(relativeToURLString urlString: String) -> String{

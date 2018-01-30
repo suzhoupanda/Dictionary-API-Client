@@ -79,9 +79,18 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
         self.startDataTask(withURLRequest: urlRequest)
     }
     
+    func downloadAPIUtilityRequestJSONData(forRESTEndpoint endpoint: OxfordUtilityAPIRequest.UtiltyRequestEndpoint, andWithTargetLanguage targetLanguage: OxfordAPILanguage?, andWithEndpointForAllFiltersReques endpointForAllFiltersRequestt: OxfordAPIEndpoint){
+        
+        let apiRequest = OxfordUtilityAPIRequest(withUtilityRequestEndpoint: endpoint, andWithTargetLanguage: targetLanguage, andWithEndpointForAllFiltersRequest: endpointForAllFiltersRequestt)
+        
+        let urlRequest = apiRequest.generateURLRequest()
+        
+        self.startDataTask(withURLRequest: urlRequest)
+    }
+    
     func downloadThesaurusJSONData(forWord word: String, withAntonyms hasRequestedAntonyms: Bool, withSynonyms hasRequestedSynonyms: Bool){
         
-        let apiRequest = OxfordAPIRequest(withWord: word, hasRequestedAntonymsQuery: hasRequestedAntonyms, hasRequestedSynonymsQuery: hasRequestedSynonyms)
+        let apiRequest = OxfordThesaurusAPIRequest(withWord: word, hasRequestedAntonymsQuery: hasRequestedAntonyms, hasRequestedSynonymsQuery: hasRequestedSynonyms)
         
         let urlRequest = apiRequest.generateURLRequest()
         

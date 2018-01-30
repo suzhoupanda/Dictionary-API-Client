@@ -10,14 +10,25 @@ import Foundation
 
 class OxfordSentencesAPIRequest: OxfordAPIRequest{
     
+    
+    override init(withQueryWord queryWord: String) {
+    
+        super.init(withQueryWord: queryWord)
+        
+    }
+    
     override func getURLString() -> String {
         
-        var urlStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: baseURLString)
+        var baseURLString = self.baseURLString
+        
+        
+        var urlStr = getURLStringFromAppendingEndpoingSpecifier(relativeToURLString: baseURLString)
+
+        urlStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: baseURLString)
         
         urlStr = getURLStringFromAppendingQueryWord(relativeToURLString: urlStr)
         
         return urlStr.appending("sentences")
-        
         
     }
 }
