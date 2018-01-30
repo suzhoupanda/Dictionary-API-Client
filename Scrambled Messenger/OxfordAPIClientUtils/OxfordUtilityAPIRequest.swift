@@ -27,11 +27,13 @@ class OxfordUtilityAPIRequest: OxfordAPIRequest{
     
     init(withUtilityRequestEndpoint endpoint: UtiltyRequestEndpoint, andWithTargetLanguage targetLang: OxfordAPILanguage? = nil, andWithEndpointForAllFiltersRequest requestedEndpointAllFiltersRequest: OxfordAPIEndpoint? = nil){
         
+        
         self.utilityRequestEndpoint = endpoint
         self.targetLanguage = targetLang
         self.endpointForAllFiltersRequest = requestedEndpointAllFiltersRequest
         
-        super.init()
+        super.init(withQueryWord: String(), andWithLanguage: .English)
+
 
         
     }
@@ -76,11 +78,13 @@ class OxfordUtilityAPIRequest: OxfordAPIRequest{
     func getURLStringFromAppendingEndpointForAllFiltersRequest(relativeToURLString urlString: String) -> String{
         
         if(self.endpointForAllFiltersRequest == nil){
+            
             print("Error: A target language was not specified for this API Request - As a result, the source language will therefore be used in place of the target language.  Please make sure to pass in a value for the target language during initialization")
             
             /** Remove the final forward slash **/
+            var tempStr = urlString
             
-            urlString.removeLast()
+            tempStr.removeLast()
             
             return urlString
         }

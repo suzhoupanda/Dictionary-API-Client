@@ -11,10 +11,10 @@ import Foundation
 class OxfordSentencesAPIRequest: OxfordAPIRequest{
     
     
-    override init(withQueryWord queryWord: String) {
+   init(withQueryWord queryWord: String) {
     
-        super.init(withQueryWord: queryWord)
-        
+        super.init(withQueryWord: queryWord, andWithLanguage: .English)
+    
     }
     
     override func getURLString() -> String {
@@ -22,7 +22,7 @@ class OxfordSentencesAPIRequest: OxfordAPIRequest{
         var baseURLString = self.baseURLString
         
         
-        var urlStr = getURLStringFromAppendingEndpoingSpecifier(relativeToURLString: baseURLString)
+        var urlStr = getURLStringFromAppendingEndpointSpecifier(relativeToURLString: baseURLString)
 
         urlStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: baseURLString)
         

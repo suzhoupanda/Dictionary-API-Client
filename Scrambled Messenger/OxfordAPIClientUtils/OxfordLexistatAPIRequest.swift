@@ -10,6 +10,9 @@ import Foundation
 
 
 class OxfordLexistatAPIRequest: OxfordAPIRequest{
+    
+    
+    
     private var ngram_size: NGramSize = NGramSize.ngram1
     
     private var wordform: String?{
@@ -17,7 +20,7 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
         set(newValue){
             
             self.wordforms = newValue == nil ? nil : [newValue!]
-            
+    
         }
         
         get{
@@ -59,62 +62,6 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
     private var lemmas: [String]?
     
     
-    
-    /** Initializes a LexiStat API request for a single word **/
-    
-    init(withLemma userLemma: String, userTrueCase: String, userWordForm: String, filters: [OxfordAPIEndpoint.OxfordAPIFilter]?){
-        
-        self.endpoint = OxfordAPIEndpoint.stats_word_frequency
-        self.word = String()
-        
-        self.lemma = userLemma
-        self.wordform = userWordForm
-        self.trueCase = userTrueCase
-        
-        self.filters = filters
-        
-        
-        
-    }
-    
-    /** Initializes a LexiStat API request for a list of words **/
-    
-    init(withLemmas userLemmas: [String]?, userTrueCases: [String]?, userWordForms: [String]?, collateOptions: [ValidCollateOption]?, sortOptions: [ValidSortOption]?, filters: [OxfordAPIEndpoint.OxfordAPIFilter]){
-        
-        self.endpoint = OxfordAPIEndpoint.stats_words_frequency
-        
-        self.lemmas = userLemmas
-        self.trueCases = userTrueCases
-        self.wordforms = userWordForms
-        
-        self.collateOptions = collateOptions
-        self.sortOptions = sortOptions
-        self.filters = filters
-        
-        self.word = String()
-        
-        
-    }
-    
-    /** Initializer for querying the LexiStat ngram endpoint, which returns the frequencies of ngrams size 1-4. Include validation for the number of ngrams **/
-    
-    init(withLemma lemma: String, withNGramSize ngram_size: NGramSize, filterBy filterTokens: [String], withOtherNGramTokens otherNGramTokens: [String], withTokenReturnFormat tokenReturnFormat: TokenReturnFormat, shouldLookUpPunctuation: Bool, andWithOtherFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter]){
-        
-        self.endpoint = OxfordAPIEndpoint.stats_ngrams_frequency
-        self.ngram_size = ngram_size
-        self.filterTokens = filterTokens
-        self.otherContainedTokens = otherNGramTokens
-        self.shouldLookUpPunctuationForNGrams = shouldLookUpPunctuation
-        self.tokenReturnFormat = tokenReturnFormat
-        self.filters = filters
-        
-        self.word = String()
-        
-        
-    }
-    
-    
-    
     private var filterTokens: [String]?
     
     private var otherContainedTokens: [String]?
@@ -127,10 +74,73 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
     
     private var tokenReturnFormat: TokenReturnFormat = .SingleString
     
+    private var corpus: String = "nmc"
     
     
+    /** Initializes a LexiStat API request for a single word **/
+    
+    init(withLemma singleLemma: String, trueCase: String, wordForm: String, filters: [OxfordAPIEndpoint.OxfordAPIFilter]?, forSourceLanguage sourceLanguage: OxfordAPILanguage = OxfordAPILanguage.English){
+        
+        super.init(withQueryWord: String(), andWithLanguage: sourceLanguage)
+        
+        self.endpoint = OxfordAPIEndpoint.stats_word_frequency
+        
+        self.word = String()
+        
+        self.lemma = singleLemma
+        self.wordform = wordForm
+        self.trueCase = trueCase
+        
+        self.filters = filters
+        
+        
+        
+    }
+    
+    /** Initializes a LexiStat API request for a list of words **/
+    
+    init(withLemmas lemmas: [String]?, trueCases: [String]?, wordForms: [String]?, collateOptions: [ValidCollateOption]?, sortOptions: [ValidSortOption]?, filters: [OxfordAPIEndpoint.OxfordAPIFilter], forSourceLanguage sourceLanguage: OxfordAPILanguage = OxfordAPILanguage.English){
+        
+        super.init(withQueryWord: String(), andWithLanguage: sourceLanguage)
+
+        self.endpoint = OxfordAPIEndpoint.stats_words_frequency
+        
+        self.lemmas = lemmas
+        self.trueCases = trueCases
+        self.wordforms = wordForms
+        
+        self.collateOptions = collateOptions
+        self.sortOptions = sortOptions
+        self.filters = filters
+        
+        
+        
+    }
+    
+    /** Initializer for querying the LexiStat ngram endpoint, which returns the frequencies of ngrams size 1-4. Include validation for the number of ngrams **/
+    
+    init(withLemma lemma: String, withNGramSize ngram_size: NGramSize, filterBy filterTokens: [String], withOtherNGramTokens otherNGramTokens: [String], withTokenReturnFormat tokenReturnFormat: TokenReturnFormat, shouldLookUpPunctuation: Bool, andWithOtherFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter], forSourceLanguage sourceLanguage: OxfordAPILanguage){
+        
+        super.init(withQueryWord: String(), andWithLanguage: sourceLanguage)
+        
+        self.endpoint = OxfordAPIEndpoint.stats_ngrams_frequency
+        self.ngram_size = ngram_size
+        self.filterTokens = filterTokens
+        self.otherContainedTokens = otherNGramTokens
+        self.shouldLookUpPunctuationForNGrams = shouldLookUpPunctuation
+        self.tokenReturnFormat = tokenReturnFormat
+        self.filters = filters
+        
+        
+        
+    }
+    
+    
+    
+  
     override func getURLString() -> String {
         
+        return getLexistatsURLString()
     }
     
     
@@ -144,7 +154,7 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
         
         if(self.endpoint == .stats_ngrams_frequency){
             
-            return getNGramURLString(forEndpointString: nextStr)
+            return getURLStringFromAppendingNGramQueryParameters(relativeToURLStrinlg: nextStr)
             
         } else  {
             
@@ -196,11 +206,16 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
     
     
     
-    private func getNGramURLString(forEndpointString endpointURLString: String) -> String{
+    private func getURLStringFromAppendingNGramQueryParameters(relativeToURLStrinlg urlString: String) -> String{
+        
+        
+        var modifiedURLStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: urlString)
+            
+        modifiedURLStr = urlString.appending("\(self.corpus)/")
         
         let ngramStr = "\(self.ngram_size.rawValue)".appending("/")
         
-        var nextStr = endpointURLString.appending(ngramStr)
+        var nextStr = modifiedURLStr.appending(ngramStr)
         
         if let filterTokens = self.filterTokens{
             

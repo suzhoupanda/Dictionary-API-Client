@@ -14,14 +14,14 @@ class OxfordThesaurusAPIRequest: OxfordAPIRequest{
     private var hasRequestedSynonyms: Bool = false
     private var hasRequestAntonyms: Bool = false
     
-    init(withWord queryWord: String, hasRequestedAntonymsQuery: Bool, hasRequestedSynonymsQuery: Bool, forLanguage queryLanguage: OxfordAPILanguage = .English){
+    init(withWord queryWord: String, isAntonymRequest: Bool, isSynonymRequest: Bool, forLanguage queryLanguage: OxfordAPILanguage = .English){
         
+        super.init(withQueryWord: queryWord, andWithLanguage: queryLanguage)
         
         self.filters = nil
-        self.hasRequestAntonyms = hasRequestAntonyms
-        self.hasRequestedSynonyms = hasRequestAntonyms
+        self.hasRequestAntonyms = isAntonymRequest
+        self.hasRequestedSynonyms = isSynonymRequest
         
-        super.init(withWord: queryWord, andWithLanguage: queryLanguage)
         
     }
     /** Appends the Thesaurus query parameters to the ULR string; **/
@@ -46,6 +46,14 @@ class OxfordThesaurusAPIRequest: OxfordAPIRequest{
             let finalURLString = urlString.appending("antonyms")
             
             return finalURLString
+            
+            /** Return synonyms by default **/
+        } else {
+            
+            let finalURLString = urlString.appending("synonyms")
+            
+            return finalURLString
+        
         }
         
         

@@ -28,6 +28,7 @@ class OxfordAPIRequest{
      var word: String
      var language: OxfordAPILanguage = .English
      var filters: [OxfordAPIEndpoint.OxfordAPIFilter]?
+     var regions: [OxfordRegion]?
     
     var resultLimit = 5000
     var resultOffset = 0
@@ -36,95 +37,49 @@ class OxfordAPIRequest{
     
     /** Different Initializers are used to restrict the range of possible URL strings that can be generated **/
     
-    init(withWord queryWord: String, withFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter]?,forLanguage queryLanguage: OxfordAPILanguage = .English){
+    convenience init(withWord queryWord: String, withFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter]?,forRegions regions: OxfordRegion, forLanguage queryLanguage: OxfordAPILanguage = .English){
         
-        self.endpoint = OxfordAPIEndpoint.entries
-        self.word = queryWord
-        self.language = OxfordAPILanguage.English
+        self.init(withQueryWord: queryLanguage.rawValue, andWithLanguage: queryLanguage)
         self.filters = filters
+        self.regions = [.us,.gb]
         
        
     }
     
-    init(withWord queryWord: String, withDictionaryEntryFilter dictionaryEntryFilter: OxfordAPIEndpoint.DictionaryEntryFilter,forLanguage queryLanguage: OxfordAPILanguage = .English){
+    convenience init(withWord queryWord: String, withDictionaryEntryFilter dictionaryEntryFilter: OxfordAPIEndpoint.DictionaryEntryFilter,forLanguage queryLanguage: OxfordAPILanguage = .English){
         
-        self.endpoint = OxfordAPIEndpoint.entries
-        self.word = queryWord
-        self.language = OxfordAPILanguage.English
+        self.init(withQueryWord: queryWord, andWithLanguage: queryLanguage)
+        
         self.filters = nil
-        
         self.dictionaryEntryFilter = dictionaryEntryFilter
     
     }
     
-    
-    
- 
-    
-    init(withWord queryWord: String, hasRequestedExampleSentences: Bool = true, forLanguage queryLanguage: OxfordAPILanguage = .English){
+    convenience init(){
         
-        self.endpoint = OxfordAPIEndpoint.entries
-        self.word = queryWord
-        self.language = OxfordAPILanguage.English
+        let randomWords = ["Love","Justice","Friendship","Big","Expensive"]
+        let randomIdx = Int(arc4random_uniform(UInt32(randomWords.count)))
+        let randomWord = randomWords[randomIdx]
+        
+        self.init(withQueryWord: randomWord, andWithLanguage: OxfordAPILanguage.English)
         self.filters = nil
         
- 
+        
     }
     
 
     
-    init(withDomainFilters domainFilters: [OxfordAPIEndpoint.OxfordAPIFilter], withRegionFilters regionFilters: [OxfordAPIEndpoint.OxfordAPIFilter], withRegisterFilters registerFilters: [OxfordAPIEndpoint.OxfordAPIFilter], withTranslationsFilters translationsFilters: [OxfordAPIEndpoint.OxfordAPIFilter], withLexicalCategoryFilters lexicalCategoryFilters: [OxfordAPIEndpoint.OxfordAPIFilter], withQueryLanguage queryLanguage: OxfordAPILanguage = .English){
-        
-        
-        self.endpoint = OxfordAPIEndpoint.wordlist
-        self.word = String()
-        self.filters = domainFilters + regionFilters + registerFilters + translationsFilters + lexicalCategoryFilters
-        self.language = queryLanguage
-        
-      
-        
-    }
-    
-    
-    init(withHeadword headWord: String, withFilters queryFilters: [OxfordAPIEndpoint.OxfordAPIFilter]?, withQueryLanguage queryLanguage: OxfordAPILanguage = .English){
-        
-        self.endpoint = OxfordAPIEndpoint.inflections
-        self.word = headWord
-        self.filters = queryFilters
-        self.language = queryLanguage
-        
-            }
-    
-    
-    init(withEndpoint queryEndpoint: OxfordAPIEndpoint, withQueryWord queryWord: String, withFilters queryFilters: [OxfordAPIEndpoint.OxfordAPIFilter]?, withQueryLanguage queryLanguage: OxfordAPILanguage = .English){
-        
-        
-        self.endpoint = queryEndpoint
-        self.word = queryWord
-        self.filters = queryFilters
-        self.language = queryLanguage
-        
-        
-    }
-    
-    /** Designated initializers  **/
+    /** Designated Initializer  **/
     
     init(withQueryWord queryWord: String, andWithLanguage language: OxfordAPILanguage = OxfordAPILanguage.English){
         
         self.endpoint = OxfordAPIEndpoint.entries
         self.word = queryWord
-        self.language = lanuage
+        self.language = language
         self.filters = nil
     }
     
-    init(){
-        self.endpoint = OxfordAPIEndpoint.utility
-        self.word = String()
-        self.language = OxfordAPILanguage.English
-        self.filters = nil
-    
-        
-    }
+  
     
     
     //TODO: Compare the efficiency and speed of the two URLRequest generators - one that requires validation and the other that doesn't require it
@@ -196,66 +151,40 @@ class OxfordAPIRequest{
 
 
    
-    /** The getURLString method is exposed during development to allow for testing **/
+    /** The default implementation for the APIRequest base class makes a request to the Oxford Dictionary API without specifying any query parameters **/
     
      func getURLString() -> String{
         
         
-        let baseURLString = OxfordAPIRequest.baseURLString.appending("/")
-
+        var nextURLStr = OxfordAPIRequest.baseURLString
         
-        if(self.endpoint == .wordlist){
-            
-            
-         
-            
-        } else if (self.endpoint == .entries) {
-            
-            /** Makes a request to the Sentence Dictionary API **/
-            if(self.hasRequestedExampleSentencesForWord){
-                
-               
-
-                /** Makes a request to the Dictionary API **/
-            } else {
-                var urlStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: baseURLString)
-                
-                urlStr = getURLStringFromAppendingQueryWord(relativeToURLString: urlStr)
-                
-                if let allFilters = self.filters{
-                    
-                    addFilters(filters: allFilters, toURLString: &urlStr)
-                    
+        nextURLStr = getURLStringFromAppendingEndpointSpecifier(relativeToURLString: nextURLStr)
         
-                }
-                
-                return urlStr
-
-            }
+        nextURLStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: nextURLStr)
+        
+        nextURLStr = getURLStringFromAppendingQueryWord(relativeToURLString: nextURLStr)
+        
+        if self.dictionaryEntryFilter != .none{
             
-        } else if (self.endpoint == .inflections){
+            return nextURLStr.appending("\(self.dictionaryEntryFilter.rawValue)")
             
+        } else if let regions = self.regions{
             
+            let regionStringArray = regions.map({$0.rawValue})
             
-            return urlStr
+            var regionStr = regionStringArray.reduce("", { $0.appending("\($1),")})
             
+            regionStr.removeLast()
             
+            nextURLStr = nextURLStr.appending(regionStr)
             
-        } else if (self.endpoint == .search){
-            
-            //TODO: Not yet implemented
-
-        } else if (self.endpoint == .translations){
-            
-            //TODO: Not yet implemented
-
-        } else if(self.endpoint == .utility){
-            
-            //TODO: Not yet implemented
+            return nextURLStr
         }
         
-        
-        return String()
+    
+        return nextURLStr
+
+
     }
         
     
@@ -271,7 +200,7 @@ class OxfordAPIRequest{
         }
         
         filters.forEach({
-            var filterString = $0.getQueryParameterString(isLastQueryParameter: false)
+            let filterString = $0.getQueryParameterString(isLastQueryParameter: false)
             urlString = urlString.appending(filterString)
         })
         

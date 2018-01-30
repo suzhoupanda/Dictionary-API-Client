@@ -33,9 +33,9 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
     }
     
     
-    func downloadLemmatronJSONData(forHeadWord headWord: String, andWithFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter]?){
+    func downloadLemmatronJSONData(forInflectedWord inflectedWord: String, forLanguage language: OxfordAPILanguage, andWithFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter]?){
         
-        let apiRequest = OxfordAPIRequest()
+        let apiRequest = OxfordLemmatronAPIRequest(withInflectedWord: inflectedWord, withFilters: filters, withQueryLanguage: language)
         
         let urlRequest = apiRequest.generateURLRequest()
         
@@ -43,18 +43,18 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
         
     }
     
-    func downloadWordListJSONData(forDomainFilters domainFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forRegionFilters regionFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forRegisterFilters registerFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forTranslationFilters translationFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forLexicalCategoryFilters lexicalCategoryFilters: [OxfordAPIEndpoint.OxfordAPIFilter]){
+    func downloadWordListJSONData(forSourceLanguage sourceLanguage: OxfordAPILanguage, forDomainFilters domainFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forRegionFilters regionFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forRegisterFilters registerFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forTranslationFilters translationFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forLexicalCategoryFilters lexicalCategoryFilters: [OxfordAPIEndpoint.OxfordAPIFilter]){
         
-        let apiRequest = OxfordAPIRequest(withDomainFilters: domainFilters, withRegionFilters: regionFilters, withRegisterFilters: registerFilters, withTranslationsFilters: translationFilters, withLexicalCategoryFilters: lexicalCategoryFilters)
+        let apiRequest = OxfordWordlistAPIRequest(withSourceLanguage: sourceLanguage, withDomainFilters: domainFilters, withRegionFilters: regionFilters, withRegisterFilters: registerFilters, withTranslationsFilters: translationFilters, withLexicalCategoryFilters: lexicalCategoryFilters)
         
         let urlRequest = apiRequest.generateURLRequest()
         
         self.startDataTask(withURLRequest: urlRequest)
     }
     
-    func downloadDictionaryEntryJSONData(forWord word: String, withFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter]?){
+    func downloadDictionaryEntryJSONData(forWord queryWord: String, andForLanguage language:OxfordAPILanguage){
         
-        let apiRequest = OxfordAPIRequest(withWord: word, withFilters: filters)
+        let apiRequest = OxfordAPIRequest(withQueryWord: queryWord, andWithLanguage: language)
 
         let urlRequest = apiRequest.generateURLRequest()
         
@@ -88,9 +88,9 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
         self.startDataTask(withURLRequest: urlRequest)
     }
     
-    func downloadThesaurusJSONData(forWord word: String, withAntonyms hasRequestedAntonyms: Bool, withSynonyms hasRequestedSynonyms: Bool){
+    func downloadThesaurusJSONData(forWord word: String, withAntonyms isAntonymRequest: Bool, withSynonyms isSynonymRequest: Bool){
         
-        let apiRequest = OxfordThesaurusAPIRequest(withWord: word, hasRequestedAntonymsQuery: hasRequestedAntonyms, hasRequestedSynonymsQuery: hasRequestedSynonyms)
+        let apiRequest = OxfordThesaurusAPIRequest(withWord: word, isAntonymRequest: isAntonymRequest, isSynonymRequest: isSynonymRequest)
         
         let urlRequest = apiRequest.generateURLRequest()
         
@@ -98,10 +98,12 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
     }
     
     
-    func downloadWordlistJSONDataWithValidation(forFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter]?, forLanguage language: OxfordAPILanguage = OxfordAPILanguage.English){
+    func downloadWordlistJSONDataWithValidation(forSourceLanguage sourceLanguage: OxfordAPILanguage, forDomainFilters domainFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forRegionFilters regionFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forRegisterFilters registerFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forTranslationFilters translationFilters: [OxfordAPIEndpoint.OxfordAPIFilter], forLexicalCategoryFilters lexicalCategoryFilters: [OxfordAPIEndpoint.OxfordAPIFilter]){
         
-        let apiRequest = OxfordAPIRequest(withEndpoint: OxfordAPIEndpoint.wordlist, withQueryWord: String(), withFilters: filters, withQueryLanguage: language)
+        let apiRequest = OxfordWordlistAPIRequest(withSourceLanguage: sourceLanguage, withDomainFilters: domainFilters, withRegionFilters: regionFilters, withRegisterFilters: registerFilters, withTranslationsFilters: translationFilters, withLexicalCategoryFilters: lexicalCategoryFilters)
         
+        let urlRequest = apiRequest.generateURLRequest()
+    
         do {
             
             let urlRequest = try apiRequest.generateValidatedURLRequest()
