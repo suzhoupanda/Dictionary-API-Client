@@ -62,7 +62,9 @@ enum ValidSortOption: String{
 
 enum OxfordAPIEndpoint: String{
     
-    case entries, inflections, search, translations, wordlist, utility
+    case entries, inflections, search, translations, wordlist
+    
+    case utility = ""
     
     case stats_word_frequency = "stats/frequency/word"
     case stats_words_frequency = "stats/frequency/words"

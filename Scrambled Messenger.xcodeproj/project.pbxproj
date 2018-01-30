@@ -41,6 +41,14 @@
 		BD5584CB1FD1579100D79C1A /* EnglishGrammaticalFeatures.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BD5584CA1FD1579100D79C1A /* EnglishGrammaticalFeatures.rtf */; };
 		BD7B5ED61FD10A5F004A0C89 /* PartOfSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7B5ED51FD10A5F004A0C89 /* PartOfSpeech.swift */; };
 		BD9BBCDB1FCD856B00C1CAA2 /* DGAnimationComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9BBCDA1FCD856B00C1CAA2 /* DGAnimationComponentTests.swift */; };
+		BDA04C582020767900155D7A /* OxfordLexistatAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C572020767900155D7A /* OxfordLexistatAPIRequest.swift */; };
+		BDA04C5A202076AB00155D7A /* OxfordSearchAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C59202076AB00155D7A /* OxfordSearchAPIRequest.swift */; };
+		BDA04C5C202076C200155D7A /* OxfordWordlistAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C5B202076C200155D7A /* OxfordWordlistAPIRequest.swift */; };
+		BDA04C5E202076ED00155D7A /* OxfordThesaurusAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C5D202076ED00155D7A /* OxfordThesaurusAPIRequest.swift */; };
+		BDA04C602020771400155D7A /* OxfordSentencesAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C5F2020771400155D7A /* OxfordSentencesAPIRequest.swift */; };
+		BDA04C622020773100155D7A /* OxfordUtilityAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C612020773100155D7A /* OxfordUtilityAPIRequest.swift */; };
+		BDA04C642020774600155D7A /* OxfordTranslationsAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C632020774600155D7A /* OxfordTranslationsAPIRequest.swift */; };
+		BDA04C6620207B7700155D7A /* OxfordDictionaryAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C6520207B7700155D7A /* OxfordDictionaryAPIRequest.swift */; };
 		BDEA10B41FC196F9003456BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEA10B31FC196F9003456BE /* AppDelegate.swift */; };
 		BDEA10B61FC196F9003456BE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEA10B51FC196F9003456BE /* ViewController.swift */; };
 		BDEA10B91FC196F9003456BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDEA10B71FC196F9003456BE /* Main.storyboard */; };
@@ -128,6 +136,14 @@
 		BD9BBCD81FCD856B00C1CAA2 /* DGAnimationComponentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DGAnimationComponentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD9BBCDA1FCD856B00C1CAA2 /* DGAnimationComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DGAnimationComponentTests.swift; sourceTree = "<group>"; };
 		BD9BBCDC1FCD856B00C1CAA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BDA04C572020767900155D7A /* OxfordLexistatAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordLexistatAPIRequest.swift; sourceTree = "<group>"; };
+		BDA04C59202076AB00155D7A /* OxfordSearchAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordSearchAPIRequest.swift; sourceTree = "<group>"; };
+		BDA04C5B202076C200155D7A /* OxfordWordlistAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordWordlistAPIRequest.swift; sourceTree = "<group>"; };
+		BDA04C5D202076ED00155D7A /* OxfordThesaurusAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordThesaurusAPIRequest.swift; sourceTree = "<group>"; };
+		BDA04C5F2020771400155D7A /* OxfordSentencesAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordSentencesAPIRequest.swift; sourceTree = "<group>"; };
+		BDA04C612020773100155D7A /* OxfordUtilityAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordUtilityAPIRequest.swift; sourceTree = "<group>"; };
+		BDA04C632020774600155D7A /* OxfordTranslationsAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordTranslationsAPIRequest.swift; sourceTree = "<group>"; };
+		BDA04C6520207B7700155D7A /* OxfordDictionaryAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordDictionaryAPIRequest.swift; sourceTree = "<group>"; };
 		BDEA10B01FC196F9003456BE /* Scrambled Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scrambled Messenger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDEA10B31FC196F9003456BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BDEA10B51FC196F9003456BE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -200,6 +216,14 @@
 				BD7B5ED51FD10A5F004A0C89 /* PartOfSpeech.swift */,
 				BD37733A1FCEA7AA00EB1DC9 /* OxfordDictionaryAPIDelegate.swift */,
 				BD3773381FCEA29300EB1DC9 /* DictionaryAPIClient.swift */,
+				BDA04C572020767900155D7A /* OxfordLexistatAPIRequest.swift */,
+				BDA04C59202076AB00155D7A /* OxfordSearchAPIRequest.swift */,
+				BDA04C5B202076C200155D7A /* OxfordWordlistAPIRequest.swift */,
+				BDA04C5D202076ED00155D7A /* OxfordThesaurusAPIRequest.swift */,
+				BDA04C5F2020771400155D7A /* OxfordSentencesAPIRequest.swift */,
+				BDA04C612020773100155D7A /* OxfordUtilityAPIRequest.swift */,
+				BDA04C632020774600155D7A /* OxfordTranslationsAPIRequest.swift */,
+				BDA04C6520207B7700155D7A /* OxfordDictionaryAPIRequest.swift */,
 			);
 			path = OxfordAPIClientUtils;
 			sourceTree = "<group>";
@@ -649,23 +673,31 @@
 			buildActionMask = 2147483647;
 			files = (
 				BD37733B1FCEA7AA00EB1DC9 /* OxfordDictionaryAPIDelegate.swift in Sources */,
+				BDA04C622020773100155D7A /* OxfordUtilityAPIRequest.swift in Sources */,
 				BD448D9D1FD69A02001D3C73 /* TwitterSignInViewController.swift in Sources */,
 				BD2441AA1FD93357004495C8 /* MWAPIClient.swift in Sources */,
 				BD3773391FCEA29300EB1DC9 /* DictionaryAPIClient.swift in Sources */,
 				BD7B5ED61FD10A5F004A0C89 /* PartOfSpeech.swift in Sources */,
 				BD39EC0C1FD3C17B007CB405 /* OxfordAPIClient.swift in Sources */,
+				BDA04C5A202076AB00155D7A /* OxfordSearchAPIRequest.swift in Sources */,
+				BDA04C642020774600155D7A /* OxfordTranslationsAPIRequest.swift in Sources */,
 				BD469CF31FD94C4D008C4331 /* MWAPIDataStructures.swift in Sources */,
+				BDA04C582020767900155D7A /* OxfordLexistatAPIRequest.swift in Sources */,
 				BDEA10BC1FC196F9003456BE /* Scrambled_Messenger.xcdatamodeld in Sources */,
 				BD469CF51FD95227008C4331 /* DictNode.swift in Sources */,
 				BDEA10B61FC196F9003456BE /* ViewController.swift in Sources */,
 				BDEA10B41FC196F9003456BE /* AppDelegate.swift in Sources */,
+				BDA04C5C202076C200155D7A /* OxfordWordlistAPIRequest.swift in Sources */,
+				BDA04C6620207B7700155D7A /* OxfordDictionaryAPIRequest.swift in Sources */,
 				BD43D3D21FCE756D003E8CA8 /* LinguisticTaggerHelper.swift in Sources */,
 				BD43F7201FD980B500AD2E77 /* DictionaryEntry.swift in Sources */,
 				BD43F7231FD98C9500AD2E77 /* MWAPIDelegate.swift in Sources */,
 				BD2441AE1FD9389A004495C8 /* MWAPIRequest.swift in Sources */,
+				BDA04C602020771400155D7A /* OxfordSentencesAPIRequest.swift in Sources */,
 				BD39EC061FD3B45F007CB405 /* ObjectiveCBridgingHeader.m in Sources */,
 				BD469CF71FD95360008C4331 /* DictTree.swift in Sources */,
 				BD39EC0A1FD3C0E9007CB405 /* OxfordAPIRequest.swift in Sources */,
+				BDA04C5E202076ED00155D7A /* OxfordThesaurusAPIRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
