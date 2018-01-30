@@ -61,9 +61,18 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
         self.startDataTask(withURLRequest: urlRequest)
     }
     
+    func downloadDictionaryEntryJSONData(forWord word: String, andForEntryFilter entryFilter: OxfordAPIEndpoint.DictionaryEntryFilter){
+        
+        let apiRequest = OxfordAPIRequest(withWord: word, withDictionaryEntryFilter: entryFilter)
+        
+        let urlRequest = apiRequest.generateURLRequest()
+        
+        self.startDataTask(withURLRequest: urlRequest)
+    }
+    
     func downloadExampleSentencesJSONData(forWord word: String){
         
-        let apiRequest = OxfordAPIRequest(withWord: word, hasRequestedExampleSentencesQuery: true, forLanguage: OxfordAPILanguage.English)
+        let apiRequest = OxfordAPIRequest(withWord: word, withDictionaryEntryFilter: .sentences)
         
         let urlRequest = apiRequest.generateURLRequest()
         

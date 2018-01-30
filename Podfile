@@ -6,6 +6,7 @@ target 'Scrambled Messenger' do
   use_frameworks!
 
   # Pods for Scrambled Messenger
- 	 pod 'TwitterKit'
+ 	pod 'TwitterKit'
+	pod 'KissXML'
 
 end

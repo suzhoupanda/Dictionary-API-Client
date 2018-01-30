@@ -52,7 +52,7 @@ class OxfordAPIClientAsynchronousTests: XCTestCase, OxfordDictionaryAPIDelegate 
         
         sharedClient.downloadWordlistJSONDataWithValidation(forFilters: [
             OxfordAPIEndpoint.OxfordAPIFilter.registers([
-                OxfordLanguageRegisters.archaic.rawValue
+                OxfordLanguageRegister.archaic.rawValue
                 ])
             ])
         
@@ -72,7 +72,7 @@ class OxfordAPIClientAsynchronousTests: XCTestCase, OxfordDictionaryAPIDelegate 
         sharedClient.downloadWordListJSONData(
             forDomainFilters: [],
             forRegionFilters: [OxfordAPIEndpoint.OxfordAPIFilter.regions([OxfordRegion.us.rawValue])],
-            forRegisterFilters: [OxfordAPIEndpoint.OxfordAPIFilter.registers([OxfordLanguageRegisters.dialect.rawValue])],
+            forRegisterFilters: [OxfordAPIEndpoint.OxfordAPIFilter.registers([OxfordLanguageRegister.dialect.rawValue])],
             forTranslationFilters: [],
             forLexicalCategoryFilters: [])
         
@@ -94,7 +94,7 @@ class OxfordAPIClientAsynchronousTests: XCTestCase, OxfordDictionaryAPIDelegate 
         sharedClient.downloadWordListJSONData(
             forDomainFilters: [],
             forRegionFilters: [],
-            forRegisterFilters: [OxfordAPIEndpoint.OxfordAPIFilter.registers([OxfordLanguageRegisters.army_slang.rawValue])],
+            forRegisterFilters: [OxfordAPIEndpoint.OxfordAPIFilter.registers([OxfordLanguageRegister.army_slang.rawValue])],
             forTranslationFilters: [],
             forLexicalCategoryFilters: [])
         
@@ -112,7 +112,7 @@ class OxfordAPIClientAsynchronousTests: XCTestCase, OxfordDictionaryAPIDelegate 
     
         
         sharedClient.downloadWordListJSONData(
-            forDomainFilters: [OxfordAPIEndpoint.OxfordAPIFilter.domains([OxfordDomains.anatomy.rawValue])],   forRegionFilters: [],
+            forDomainFilters: [OxfordAPIEndpoint.OxfordAPIFilter.domains([OxfordDomain.anatomy.rawValue])],   forRegionFilters: [],
             forRegisterFilters: [],
           forTranslationFilters: [],
           forLexicalCategoryFilters: [])

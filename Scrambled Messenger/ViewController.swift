@@ -8,7 +8,7 @@
 
 import UIKit
 import SpriteKit
-
+import TwitterKit
 
 class ViewController: UIViewController {
 
@@ -66,7 +66,10 @@ class ViewController: UIViewController {
 
        /** DictionaryAPIClient.getJSONDictionaryForWord(word: "love") **/
         
-      
+        MWAPIClient.sharedClient.downloadXMLData(forHeadWord: "love", hasRequestThesaurusAPI: false)
+        
+        
+       
         
     }
     
@@ -76,6 +79,22 @@ class ViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        
+       
+     
+        
+        //let client = TWTRAPIClient.withCurrentUser()
+        
+        /**
+        client.requestEmail { email, error in
+            if (email != nil) {
+                print("signed in as \(session.userName)");
+            } else {
+                print("error: \(error.localizedDescription)");
+            }
+        }
+         **/
+        
     }
     
     

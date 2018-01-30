@@ -18,14 +18,76 @@ struct OxfordAPIRequest{
         return URL(string: baseURLString)!
     }
     
-    var endpoint: OxfordAPIEndpoint
-    var word: String
-    var language: OxfordAPILanguage
-    var filters: [OxfordAPIEndpoint.OxfordAPIFilter]?
+    private var endpoint: OxfordAPIEndpoint
+    private var word: String
+    private var language: OxfordAPILanguage = .English
+    private var filters: [OxfordAPIEndpoint.OxfordAPIFilter]?
     
-    var hasRequestedSynonyms: Bool = false
-    var hasRequestAntonyms: Bool = false
-    var hasRequestedExampleSentences: Bool = false
+    private var hasRequestedSynonyms: Bool = false
+    private var hasRequestAntonyms: Bool = false
+    private var dictionaryEntryFilter: OxfordAPIEndpoint.DictionaryEntryFilter = OxfordAPIEndpoint.DictionaryEntryFilter.none
+    
+    private var ngram_size: NGramSize = NGramSize.ngram1
+    
+    private var wordform: String?{
+        
+        set(newValue){
+            
+            self.wordforms = newValue == nil ? nil : [newValue!]
+           
+        }
+        
+        get{
+            return self.wordforms?.first
+        }
+    }
+    
+    private var wordforms: [String]?
+    
+    
+    private var trueCase: String?{
+        
+        set(newValue){
+            
+            self.trueCases = newValue == nil ? nil : [newValue!]
+            
+        }
+        
+        get{
+            return self.trueCases?.first
+        }
+    }
+    private var trueCases: [String]?
+    
+    
+    private var lemma: String?{
+        
+        set(newValue){
+            
+            self.lemmas = newValue == nil ? nil : [newValue!]
+            
+        }
+        
+        get{
+            return self.lemmas?.first
+        }
+    }
+    
+    private var lemmas: [String]?
+    
+    
+    
+    private var filterTokens: [String]?
+    
+    private var otherContainedTokens: [String]?
+    
+    private var shouldLookUpPunctuationForNGrams = false
+    
+    private var collateOptions: [ValidCollateOption]?
+    
+    private var sortOptions: [ValidSortOption]?
+    
+    private var tokenReturnFormat: TokenReturnFormat = .SingleString
     
     /** Different Initializers are used to restrict the range of possible URL strings that can be generated **/
     
@@ -36,20 +98,71 @@ struct OxfordAPIRequest{
         self.language = OxfordAPILanguage.English
         self.filters = filters
         
-        self.hasRequestedExampleSentences = false
         self.hasRequestedSynonyms = false
         self.hasRequestAntonyms = false
     }
     
+    /** Initializes a LexiStat API request for a single word **/
     
-    init(withWord queryWord: String, hasRequestedExampleSentencesQuery: Bool,forLanguage queryLanguage: OxfordAPILanguage = .English){
+    init(withLemma userLemma: String, userTrueCase: String, userWordForm: String, filters: [OxfordAPIEndpoint.OxfordAPIFilter]?){
+        
+        self.endpoint = OxfordAPIEndpoint.stats_word_frequency
+        self.word = String()
+
+        self.lemma = userLemma
+        self.wordform = userWordForm
+        self.trueCase = userTrueCase
+        
+        self.filters = filters
+        
+
+        
+    }
+    
+    /** Initializes a LexiStat API request for a list of words **/
+    
+    init(withLemmas userLemmas: [String]?, userTrueCases: [String]?, userWordForms: [String]?, collateOptions: [ValidCollateOption]?, sortOptions: [ValidSortOption]?, filters: [OxfordAPIEndpoint.OxfordAPIFilter]){
+        
+        self.endpoint = OxfordAPIEndpoint.stats_words_frequency
+        
+        self.lemmas = userLemmas
+        self.trueCases = userTrueCases
+        self.wordforms = userWordForms
+    
+        self.collateOptions = collateOptions
+        self.sortOptions = sortOptions
+        self.filters = filters
+        
+        self.word = String()
+
+        
+    }
+    
+    /** Initializer for querying the LexiStat ngram endpoint, which returns the frequencies of ngrams size 1-4. Include validation for the number of ngrams **/
+    
+    init(withLemma lemma: String, withNGramSize ngram_size: NGramSize, filterBy filterTokens: [String], withOtherNGramTokens otherNGramTokens: [String], withTokenReturnFormat tokenReturnFormat: TokenReturnFormat, shouldLookUpPunctuation: Bool, andWithOtherFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter]){
+        
+        self.endpoint = OxfordAPIEndpoint.stats_ngrams_frequency
+        self.ngram_size = ngram_size
+        self.filterTokens = filterTokens
+        self.otherContainedTokens = otherNGramTokens
+        self.shouldLookUpPunctuationForNGrams = shouldLookUpPunctuation
+        self.tokenReturnFormat = tokenReturnFormat
+        self.filters = filters
+        
+        self.word = String()
+
+        
+    }
+    
+    init(withWord queryWord: String, withDictionaryEntryFilter dictionaryEntryFilter: OxfordAPIEndpoint.DictionaryEntryFilter,forLanguage queryLanguage: OxfordAPILanguage = .English){
         
         self.endpoint = OxfordAPIEndpoint.entries
         self.word = queryWord
         self.language = OxfordAPILanguage.English
         self.filters = nil
         
-        self.hasRequestedExampleSentences = hasRequestedExampleSentencesQuery
+        self.dictionaryEntryFilter = dictionaryEntryFilter
         self.hasRequestedSynonyms = false
         self.hasRequestAntonyms = false
     }
@@ -61,7 +174,6 @@ struct OxfordAPIRequest{
         self.language = OxfordAPILanguage.English
         self.filters = nil
         
-        self.hasRequestedExampleSentences = false
         self.hasRequestedSynonyms = hasRequestedSynonymsQuery
         self.hasRequestAntonyms = hasRequestedAntonymsQuery
     }
@@ -76,7 +188,6 @@ struct OxfordAPIRequest{
         self.filters = domainFilters + regionFilters + registerFilters + translationsFilters + lexicalCategoryFilters
         self.language = queryLanguage
         
-        self.hasRequestedExampleSentences = false
         self.hasRequestAntonyms = false
         self.hasRequestedSynonyms = false
         
@@ -90,7 +201,6 @@ struct OxfordAPIRequest{
         self.filters = queryFilters
         self.language = queryLanguage
         
-        self.hasRequestedExampleSentences = false
         self.hasRequestAntonyms = false
         self.hasRequestedSynonyms = false
     }
@@ -104,7 +214,6 @@ struct OxfordAPIRequest{
         self.filters = queryFilters
         self.language = queryLanguage
         
-        self.hasRequestedExampleSentences = false
         self.hasRequestAntonyms = false
         self.hasRequestedSynonyms = false
         
@@ -117,7 +226,6 @@ struct OxfordAPIRequest{
         self.language = OxfordAPILanguage.English
         self.filters = nil
         
-        self.hasRequestedExampleSentences = false
         self.hasRequestedSynonyms = false
         self.hasRequestAntonyms = false
         
@@ -268,9 +376,10 @@ struct OxfordAPIRequest{
                         return finalURLString
                     }
                     
-                } else if(hasRequestedExampleSentences) {
+                } else if(self.dictionaryEntryFilter != .none) {
                     
-                    let finalURLString = wordURLString.appending("sentences")
+                
+                    let finalURLString = wordURLString.appending(dictionaryEntryFilter.rawValue)
                     
                     return finalURLString
                     

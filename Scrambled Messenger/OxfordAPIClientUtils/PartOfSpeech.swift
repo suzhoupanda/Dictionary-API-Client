@@ -31,9 +31,59 @@ enum OxfordRegion: String{
     case gb,us
 }
 
+enum NGramSize: Int{
+    case ngram1 = 1
+    case ngram2 = 2
+    case ngram3 = 3
+    case ngram4 = 4
+}
+
+enum TokenReturnFormat: String{
+    case SingleString = "google"
+    case ListOfStrings = "oup"
+}
+
+enum ValidCollateOption: String{
+    case wordform
+    case lemma
+    case trueCase
+    case lexicalCategory
+}
+
+enum ValidSortOption: String{
+
+    case wordform
+    case trueCase
+    case lemma
+    case lexicalCategory
+    case frequency
+    case normalizedFrequency
+}
+
 enum OxfordAPIEndpoint: String{
     
     case entries, inflections, translations, wordlist
+    
+    case stats_word_frequency = "stats/frequency/word"
+    case stats_words_frequency = "stats/frequency/words"
+    case stats_ngrams_frequency = "stats/frequency/ngrams/en/nmc/"
+    
+
+    /** These are treated as subdivisions of the dictionary entries endpoint rather than as filters per se **/
+    enum DictionaryEntryFilter: String{
+        case examples
+        case pronunciations
+        case definitions
+        case etymologies
+        case variantForms
+        case registers
+        case regions
+        case domains
+        case grammaticalFeatures
+        case lexicalCategory
+        case sentences
+        case none = ""
+    }
     
     enum OxfordAPIFilter: Hashable{
         
@@ -61,7 +111,42 @@ enum OxfordAPIEndpoint: String{
                 return 9
             case .variantForms( _):
                 return 10
-                
+            case .trueCase(_):
+                return 11
+            case .format(_):
+                return 12
+            case .collate(_):
+                return 13
+            case .sort(_):
+                return 14
+            case .punctuation(_):
+                return 15
+            case .limit(_):
+                return 16
+            case .offset(_):
+                return 17
+            case .tokens(_):
+                return 18
+            case .contains(_):
+                return 19
+            case .minFrequency(_):
+                return 20
+            case .minDocumentFrequency(_):
+                return 21
+            case .minNormalizedFrequency(_):
+                return 22
+            case .maxFrequency(_):
+                return 23
+            case .maxDocumentFrequency(_):
+                return 24
+            case .maxNormalizedFrequency(_):
+                return 25
+            case .wordform(_):
+                return 26
+            case .wordforms(_):
+                return 27
+            case .lemma(_):
+                return 28
             }
         }
         
@@ -94,6 +179,42 @@ enum OxfordAPIEndpoint: String{
                 return "pronunciations"
             case .variantForms(_):
                 return "variantForms"
+            case .lemma(_):
+                return "lemma"
+            case .wordform(_):
+                return "wordform"
+            case .wordforms(_):
+                return "wordforms"
+            case .trueCase(_):
+                return "trueCase"
+            case .limit(_):
+                return "limit"
+            case .offset(_):
+                return "offset"
+            case .collate(_):
+                return "collate"
+            case .contains(_):
+                return "contains"
+            case .sort(_):
+                return "sort"
+            case .format(_):
+                return "format"
+            case .minFrequency(_):
+                return "minFrequency"
+            case .minNormalizedFrequency(_):
+                return "minNormalizedFrequency"
+            case .minDocumentFrequency(_):
+                return "minDocumentFrequency"
+            case .maxFrequency(_):
+                return "maxFrequency"
+            case .maxDocumentFrequency(_):
+                return "maxDocumentFrequency"
+            case .maxNormalizedFrequency(_):
+                return "maxNormalizedFrequency"
+            case .tokens(_):
+                return "tokens"
+            case .punctuation(_):
+                return "punctuation"
             }
         }
         
@@ -108,57 +229,120 @@ enum OxfordAPIEndpoint: String{
         case grammaticalFeatures([String])
         case pronunciations([String])
         case variantForms([String])
+        case wordform(String)
+        case wordforms([String])
+        case lemma([String])
+        case trueCase([String])
+        case limit(Int)
+        case offset(Int)
+        case collate([OxfordAPIFilter])
+        case sort([OxfordAPIFilter])
+        case minFrequency(Int)
+        case maxFrequency(Int)
+        case minNormalizedFrequency(Int)
+        case maxNormalizedFrequency(Int)
+        case minDocumentFrequency(Int)
+        case maxDocumentFrequency(Int)
+        case punctuation(Bool)
+        case tokens([String])
+        case contains([String])
+        case format(Bool)
         
         func getQueryParameterString(isLastQueryParameter: Bool) -> String{
             
-            var queryString: String
+            var queryString: String = "\(getDebugName())="
             
             switch self {
             case .lexicalCategory(let parameterValues):
-                queryString = "lexicalCategory="
                 queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
                 break
             case .grammaticalFeatures(let parameterValues):
-                queryString = "grammaticalFeatures="
                 queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
                 break
             case .regions(let parameterValues):
-                queryString = "regions="
                 queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
                 break
             case .domains(let parameterValues):
-                queryString = "domains="
                 queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
                 break
             case .registers(let parameterValues):
-                queryString = "registers="
                 queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
                 break
             case .definitions(let parameterValues):
-                queryString = "definitions="
                 queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
                 break
             case .etymologies(let parameterValues):
-                queryString = "etymologies="
                 queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
                 break
             case .pronunciations(let parameterValues):
-                queryString = "pronunciations="
                 queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
                 break
             case .variantForms(let parameterValues):
-                queryString = "variantForms="
                 queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
                 break
+            case .wordforms(let parameterValues):
+                queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
+                queryString.removeLast()
+                break
+            case .collate(let filters):
+                let filterStrings = filters.map({ return $0.getDebugName()} )
+                queryString = filterStrings.reduce(queryString, {$0.appending("\($1),")})
+                queryString.removeLast()
+                break
+            case .sort(let filters):
+                let filterStrings = filters.map({ return $0.getDebugName()} )
+                queryString = filterStrings.reduce(queryString, {$0.appending("\($1),")})
+                queryString.removeLast()
+                break
+            case .wordform(let wordform):
+                queryString = queryString.appending("\(wordform)")
+                break
+            case .limit(let resultsLimit):
+                queryString = queryString.appending("\(resultsLimit)")
+                break
+            case .offset(let resultsOffset):
+                queryString = queryString.appending("\(resultsOffset)")
+                break
+            case .maxFrequency(let maxFrequency):
+                queryString = queryString.appending("\(maxFrequency)")
+                break
+            case .minFrequency(let minFrequency):
+                queryString = queryString.appending("\(minFrequency)")
+                break
+            case .maxNormalizedFrequency(let maxNormalizedFrequency):
+                queryString = queryString.appending("\(maxNormalizedFrequency)")
+                break
+            case .minNormalizedFrequency(let minNormalizedFrequency):
+                queryString = queryString.appending("\(minNormalizedFrequency)")
+                break
+            case .minDocumentFrequency(let minDocumentFrequency):
+                queryString = queryString.appending("\(minDocumentFrequency)")
+                break
+            case .maxDocumentFrequency(let maxDocumentFrequency):
+                queryString = queryString.appending("\(maxDocumentFrequency)")
+                break
+            case .punctuation(let shouldIncludePunctuation):
+                queryString = queryString.appending("\(shouldIncludePunctuation ? "true" : "false")")
+                break
+            case .format(let shouldReturnAsSingleString):
+                queryString = queryString.appending("\(shouldReturnAsSingleString ? "google" : "oup")")
+                break
+            case .tokens(let tokenValues):
+                queryString = tokenValues.reduce(queryString, {$0.appending("\($1),")})
+                queryString.removeLast()
+                break
+            case .contains(let tokenValues):
+                queryString = tokenValues.reduce(queryString, {$0.appending("\($1),")})
+                queryString.removeLast()
             default:
                 queryString = String()
             }
@@ -173,7 +357,7 @@ enum OxfordAPIEndpoint: String{
     }
     
     
-    private func addParamtersValues(parameterValues: [String], toQueryString queryString: inout String){
+    private func addParameterValues(parameterValues: [String], toQueryString queryString: inout String){
         queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
         queryString.removeLast()
     }
@@ -181,6 +365,9 @@ enum OxfordAPIEndpoint: String{
    
     
     func getAvailableFilters() -> Set<OxfordAPIFilter>{
+        
+        let resultLimitationFilters: Set<OxfordAPIFilter> = Set([OxfordAPIFilter.offset(0),OxfordAPIFilter.limit(1000)])
+    
         switch self {
         case .entries:
             return Set([.definitions([]),.domains([]),.etymologies([]),.examples([]),.grammaticalFeatures([]),.lexicalCategory([]),
@@ -191,11 +378,18 @@ enum OxfordAPIEndpoint: String{
             return Set([])
         case .wordlist:
             return Set([ .domains([]),.lexicalCategory([]),.regions([]),.registers([]),.translations([])])
+        case .stats_word_frequency:
+            return Set([ .wordform(""),.trueCase([]),.lemma([]),.lexicalCategory([]) ])
+        case .stats_words_frequency:
+            return Set([.collate([]),.sort([]),.minFrequency(0),.maxFrequency(10000),.minNormalizedFrequency(0),.maxNormalizedFrequency(10000),.wordforms([]),.trueCase([]),.lemma([]),.lexicalCategory([]),.grammaticalFeatures([])]).union(resultLimitationFilters)
+        case .stats_ngrams_frequency:
+            return Set([.minDocumentFrequency(0),.maxDocumentFrequency(10000),.minFrequency(0),.maxFrequency(10000),.contains([]),.tokens([])]).union(resultLimitationFilters)
+      
         }
     }
 }
 
-enum OxfordDomains: String{
+enum OxfordDomain: String{
     case air_force, alcoholic,american_civil_war,american_football,amerindian
     case anatomy,ancient_history,angling,anthropology, archaeology, archery, architecture
     case art, artefacts, arts_and_humanities, astrology, astronomy
@@ -234,11 +428,11 @@ enum OxfordDomains: String{
 
 }
 
-enum OxfordLanguageRegisters: String{
+enum OxfordLanguageRegister: String{
     case allusive
     case archaic
     case allusively
-    case army_slang = "army_slang"
+    case army_slang
     case black_english
     case coarse_slang
     case cant
@@ -266,9 +460,7 @@ enum OxfordLanguageRegisters: String{
     case literary
     case military_slang
     case nautical_slang
-    case non_standard = "non-standard"
-    case nonce_use = "nonce-use"
-    case nursery = "nursery"
+    case nursery
     case obsolete
     case offensive
     case personified
@@ -278,7 +470,6 @@ enum OxfordLanguageRegisters: String{
     case proverb
     case pseuodo_archaic
     case rare,rarely
-    case RAF_slang = "R.A.F_slang"
     case rhyming_slang
     case school_slang
     case slang
@@ -292,12 +483,18 @@ enum OxfordLanguageRegisters: String{
     case university_slang
     case vulgar_slang
     
+    case non_standard = "non-standard"
+    case nonce_use = "nonce-use"
+    case RAF_slang = "R.A.F_slang"
+ 
     /**
-    case children%27S_Slang
-    case criminals%27_Slang
-    case journalists%27_Slang
-    case services%27_Slang
-    case showmen%27S_Slang
+=     case children%27S_Slang
+     case criminals%27_Slang
+     case journalists%27_Slang
+        case services%27_Slang
+        case showmen%27S_Slang
+     case children_slang = "children%27S_Slang"
+     case criminal_slang = "criminals%27_slang"
     **/
 }
 
@@ -342,7 +539,7 @@ enum OxfordHTTPStatusCode: Int{
 enum OxfordLexicalCategory: String{
     
     case noun, verb
-    case combining_form = "combining form"
+    case combining_form
     case adjective,adverb
     case conjunction, contraction
     case determiner,idiomatic,interjection
@@ -389,8 +586,6 @@ enum OxfordGrammaticalFeature: String{
     //person
     case third
     
-    case proper
-    
     //unit structure
     case phrasal
     
@@ -423,8 +618,8 @@ enum OxfordGrammaticalFeature: String{
     
     //non finiteness
     case infinitive
-    case past_participle = "past participle"
-    case present_participle = "present participle"
+    case past_participle
+    case present_participle
     
 }
 

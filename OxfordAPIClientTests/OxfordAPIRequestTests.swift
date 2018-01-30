@@ -61,7 +61,7 @@ class OxfordAPIRequestTests: XCTestCase {
         dictEntryRequestWithRegionFilters = OxfordAPIRequest(withWord: "love", withFilters: [OxfordAPIEndpoint.OxfordAPIFilter.regions([OxfordRegion.us.rawValue])])
 
         wordListRequestWithDomainFilters = OxfordAPIRequest(
-            withDomainFilters: [OxfordAPIEndpoint.OxfordAPIFilter.domains([OxfordDomains.anatomy.rawValue])],
+            withDomainFilters: [OxfordAPIEndpoint.OxfordAPIFilter.domains([OxfordDomain.anatomy.rawValue])],
             withRegionFilters: [],
             withRegisterFilters: [],
             withTranslationsFilters: [],
@@ -71,7 +71,7 @@ class OxfordAPIRequestTests: XCTestCase {
         wordListRequestWithRegisterFilters = OxfordAPIRequest(
             withDomainFilters: [],
             withRegionFilters: [],
-            withRegisterFilters: [OxfordAPIEndpoint.OxfordAPIFilter.registers([OxfordLanguageRegisters.dialect.rawValue])],
+            withRegisterFilters: [OxfordAPIEndpoint.OxfordAPIFilter.registers([OxfordLanguageRegister.dialect.rawValue])],
             withTranslationsFilters: [],
             withLexicalCategoryFilters: [],
             withQueryLanguage: .English)
@@ -79,7 +79,7 @@ class OxfordAPIRequestTests: XCTestCase {
         wordListRequestWithRegisterAndRegionFilters = OxfordAPIRequest(
             withDomainFilters: [],
             withRegionFilters: [OxfordAPIEndpoint.OxfordAPIFilter.regions([OxfordRegion.us.rawValue])],
-            withRegisterFilters: [OxfordAPIEndpoint.OxfordAPIFilter.registers([OxfordLanguageRegisters.dialect.rawValue])],
+            withRegisterFilters: [OxfordAPIEndpoint.OxfordAPIFilter.registers([OxfordLanguageRegister.dialect.rawValue])],
             withTranslationsFilters: [],
             withLexicalCategoryFilters: [],
             withQueryLanguage: .English)
