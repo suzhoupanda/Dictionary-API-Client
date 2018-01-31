@@ -11,7 +11,6 @@
 		BD2441AA1FD93357004495C8 /* MWAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2441A91FD93357004495C8 /* MWAPIClient.swift */; };
 		BD2441AE1FD9389A004495C8 /* MWAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2441AD1FD9389A004495C8 /* MWAPIRequest.swift */; };
 		BD2441B01FD93E74004495C8 /* XMLParserDelegateOutput.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BD2441AF1FD93E74004495C8 /* XMLParserDelegateOutput.rtf */; };
-		BD3773351FCE8C0500EB1DC9 /* LinguisticTaggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3773341FCE8C0500EB1DC9 /* LinguisticTaggerTests.swift */; };
 		BD3773371FCE8C9100EB1DC9 /* TaggerTestData.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD3773361FCE8C9100EB1DC9 /* TaggerTestData.plist */; };
 		BD3773391FCEA29300EB1DC9 /* DictionaryAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3773381FCEA29300EB1DC9 /* DictionaryAPIClient.swift */; };
 		BD37733B1FCEA7AA00EB1DC9 /* OxfordDictionaryAPIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD37733A1FCEA7AA00EB1DC9 /* OxfordDictionaryAPIDelegate.swift */; };
@@ -40,7 +39,6 @@
 		BD5584C91FD1572900D79C1A /* EnglishLexicalCategories.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BD5584C81FD1572900D79C1A /* EnglishLexicalCategories.rtf */; };
 		BD5584CB1FD1579100D79C1A /* EnglishGrammaticalFeatures.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BD5584CA1FD1579100D79C1A /* EnglishGrammaticalFeatures.rtf */; };
 		BD7B5ED61FD10A5F004A0C89 /* PartOfSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7B5ED51FD10A5F004A0C89 /* PartOfSpeech.swift */; };
-		BD9BBCDB1FCD856B00C1CAA2 /* DGAnimationComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9BBCDA1FCD856B00C1CAA2 /* DGAnimationComponentTests.swift */; };
 		BDA04C582020767900155D7A /* OxfordLexistatAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C572020767900155D7A /* OxfordLexistatAPIRequest.swift */; };
 		BDA04C5A202076AB00155D7A /* OxfordSearchAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C59202076AB00155D7A /* OxfordSearchAPIRequest.swift */; };
 		BDA04C5C202076C200155D7A /* OxfordWordlistAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA04C5B202076C200155D7A /* OxfordWordlistAPIRequest.swift */; };
@@ -95,7 +93,6 @@
 		BD2441A91FD93357004495C8 /* MWAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWAPIClient.swift; sourceTree = "<group>"; };
 		BD2441AD1FD9389A004495C8 /* MWAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWAPIRequest.swift; sourceTree = "<group>"; };
 		BD2441AF1FD93E74004495C8 /* XMLParserDelegateOutput.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = XMLParserDelegateOutput.rtf; sourceTree = "<group>"; };
-		BD3773341FCE8C0500EB1DC9 /* LinguisticTaggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinguisticTaggerTests.swift; sourceTree = "<group>"; };
 		BD3773361FCE8C9100EB1DC9 /* TaggerTestData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = TaggerTestData.plist; sourceTree = "<group>"; };
 		BD3773381FCEA29300EB1DC9 /* DictionaryAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryAPIClient.swift; sourceTree = "<group>"; };
 		BD37733A1FCEA7AA00EB1DC9 /* OxfordDictionaryAPIDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordDictionaryAPIDelegate.swift; sourceTree = "<group>"; };
@@ -134,7 +131,6 @@
 		BD5584CA1FD1579100D79C1A /* EnglishGrammaticalFeatures.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = EnglishGrammaticalFeatures.rtf; sourceTree = "<group>"; };
 		BD7B5ED51FD10A5F004A0C89 /* PartOfSpeech.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartOfSpeech.swift; sourceTree = "<group>"; };
 		BD9BBCD81FCD856B00C1CAA2 /* DGAnimationComponentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DGAnimationComponentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BD9BBCDA1FCD856B00C1CAA2 /* DGAnimationComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DGAnimationComponentTests.swift; sourceTree = "<group>"; };
 		BD9BBCDC1FCD856B00C1CAA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDA04C572020767900155D7A /* OxfordLexistatAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordLexistatAPIRequest.swift; sourceTree = "<group>"; };
 		BDA04C59202076AB00155D7A /* OxfordSearchAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxfordSearchAPIRequest.swift; sourceTree = "<group>"; };
@@ -298,8 +294,6 @@
 		BD9BBCD91FCD856B00C1CAA2 /* ScrambledMessengerTests */ = {
 			isa = PBXGroup;
 			children = (
-				BD3773341FCE8C0500EB1DC9 /* LinguisticTaggerTests.swift */,
-				BD9BBCDA1FCD856B00C1CAA2 /* DGAnimationComponentTests.swift */,
 				BD9BBCDC1FCD856B00C1CAA2 /* Info.plist */,
 			);
 			path = ScrambledMessengerTests;
@@ -663,8 +657,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BD3773351FCE8C0500EB1DC9 /* LinguisticTaggerTests.swift in Sources */,
-				BD9BBCDB1FCD856B00C1CAA2 /* DGAnimationComponentTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
