@@ -67,7 +67,28 @@ class ViewController: UIViewController {
        /** DictionaryAPIClient.getJSONDictionaryForWord(word: "love") **/
         
         
+        let wordlistRequest = OxfordWordlistAPIRequest(withSourceLanguage: .English, withDomainFilters: [OxfordAPIEndpoint.OxfordAPIFilter.domains([
+                OxfordDomain.air_force.rawValue,
+                OxfordDomain.amerindian.rawValue,
+                OxfordDomain.alcoholic.rawValue,
+                OxfordDomain.biblical.rawValue
+            ])], withRegionFilters: [
+                OxfordAPIEndpoint.OxfordAPIFilter.regions([
+                    OxfordRegion.us.rawValue
+                ])
+            ], withRegisterFilters: [
+                
+            ], withTranslationsFilters: [
+            
+            ], withLexicalCategoryFilters: [
+            
+            ])
         
+        let urlString = wordlistRequest.getURLString()
+        
+        print(urlString)
+        
+        OxfordAPIClient.sharedClient.getWordListJSONData(forSourceLanguage: .English, forDomainFilters: [.anatomy], forRegionFilters: [], forRegisterFilters: [], forLexicalCategoryFilters: [])
     }
     
     
@@ -79,18 +100,7 @@ class ViewController: UIViewController {
         
        
      
-        
-        //let client = TWTRAPIClient.withCurrentUser()
-        
-        /**
-        client.requestEmail { email, error in
-            if (email != nil) {
-                print("signed in as \(session.userName)");
-            } else {
-                print("error: \(error.localizedDescription)");
-            }
-        }
-         **/
+    
         
     }
     

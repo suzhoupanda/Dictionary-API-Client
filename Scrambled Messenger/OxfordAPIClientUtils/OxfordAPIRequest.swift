@@ -12,7 +12,7 @@ import Foundation
 
 class OxfordAPIRequest{
     
-     static let baseURLString = "https://od-api.oxforddictionaries.com/api/v1"
+     static let baseURLString = "https://od-api.oxforddictionaries.com/api/v1/"
      private static let appID = "acb61904"
      private static let appKey = "383d6f9739d4974fb81168976b6e991b"
     
@@ -195,11 +195,12 @@ class OxfordAPIRequest{
      func addFilters(filters: [OxfordAPIEndpoint.OxfordAPIFilter], toURLString urlString: inout String){
 
         
-        if(filters.isEmpty){
+        if(filters.isEmpty || filters.count <= 0){
             return
         }
         
         filters.forEach({
+        
             let filterString = $0.getQueryParameterString(isLastQueryParameter: false)
             urlString = urlString.appending(filterString)
         })

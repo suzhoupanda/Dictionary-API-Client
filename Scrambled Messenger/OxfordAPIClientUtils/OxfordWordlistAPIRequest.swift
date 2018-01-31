@@ -16,6 +16,7 @@ class OxfordWordlistAPIRequest: OxfordAPIRequest{
         super.init(withQueryWord: String(), andWithLanguage: sourceLanguage)
         
         self.endpoint = OxfordAPIEndpoint.wordlist
+        
         self.filters = domainFilters + regionFilters + registerFilters + translationsFilters + lexicalCategoryFilters
         
 
@@ -28,9 +29,16 @@ class OxfordWordlistAPIRequest: OxfordAPIRequest{
         urlStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: urlStr)
         
         
-        if let allFilters = self.filters{
+        if let allFilters = self.filters, allFilters.count > 0{
+            
             addFilters(filters: allFilters, toURLString: &urlStr)
+            
+        } else {
+            
+            urlStr.removeLast()
         }
+        
+    
         
         return urlStr
     }

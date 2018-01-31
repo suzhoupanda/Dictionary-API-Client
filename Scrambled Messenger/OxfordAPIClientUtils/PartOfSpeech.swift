@@ -250,9 +250,23 @@ enum OxfordAPIEndpoint: String{
         case contains([String])
         case format(Bool)
         
+        func getParameterValues() -> Any?{
+            
+            switch self {
+            case .contains(let tokenStrings):
+                return tokenStrings
+            case .collate(let oxfordAPIfilters):
+                return oxfordAPIfilters
+            case .definitions(let definitionsStrings):
+                return definitionsStrings
+            default:
+                return nil
+            }
+        }
+        
         func getQueryParameterString(isLastQueryParameter: Bool) -> String{
             
-            var queryString: String = "\(getDebugName())="
+            var queryString = "\(getDebugName())="
             
             switch self {
             case .lexicalCategory(let parameterValues):
@@ -284,6 +298,7 @@ enum OxfordAPIEndpoint: String{
                 queryString.removeLast()
                 break
             case .pronunciations(let parameterValues):
+                queryString = "\(getDebugName())="
                 queryString = parameterValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
                 break
@@ -345,10 +360,12 @@ enum OxfordAPIEndpoint: String{
             case .contains(let tokenValues):
                 queryString = tokenValues.reduce(queryString, {$0.appending("\($1),")})
                 queryString.removeLast()
+                break
             default:
                 queryString = String()
             }
             
+          
             
             if(!isLastQueryParameter){
                 queryString = queryString.appending(";")
