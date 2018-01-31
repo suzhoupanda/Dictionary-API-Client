@@ -39,6 +39,10 @@ class OxfordLemmatronAPIRequest: OxfordAPIRequest{
             
         }
         
+        if let lastChar = urlStr.last, lastChar == "/"{
+            urlStr.removeLast()
+        }
+        
         return urlStr
     }
 }

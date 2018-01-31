@@ -46,9 +46,39 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
         self.startDataTask(withURLRequest: urlRequest)
     }
     
-    func downloadLemmatronJSONData(forInflectedWord inflectedWord: String, forLanguage language: OxfordAPILanguage, andWithFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter]?){
+    
+    
+    
+    func getLemmatronJSONData(forInflectedWord inflectedWord: String, forLanguage language: OxfordAPILanguage){
+        
+        
+        downloadLemmatronJSONData(forInflectedWord: inflectedWord, forLanguage: language, andWithFilters: nil)
+    }
+    
+    
+    func getLemmatronJSONData(forInflectedWord inflectedWord: String, forLanguage language: OxfordAPILanguage, forLexicalCategories lexicalCategories: [OxfordLexicalCategory], forGrammaticalFeatures grammaticalFeatures: [OxfordGrammaticalFeature]){
+        
+        let lexicalCategoryStrings = lexicalCategories.map({$0.rawValue})
+        
+        let lexCategoryFilter = lexicalCategoryStrings.isEmpty ? [] : [OxfordAPIEndpoint.OxfordAPIFilter.lexicalCategory(lexicalCategoryStrings)]
+        
+        let grammaticalFeatureStrings = grammaticalFeatures.map({$0.rawValue})
+        
+        let grammaticalFeatureFilter = grammaticalFeatureStrings.isEmpty ? [] : [OxfordAPIEndpoint.OxfordAPIFilter.grammaticalFeatures(grammaticalFeatureStrings)]
+        
+        let allFilters = grammaticalFeatureFilter + lexCategoryFilter
+ 
+        downloadLemmatronJSONData(forInflectedWord: inflectedWord, forLanguage: language, andWithFilters: allFilters)
+    }
+    
+    
+    
+    
+    private func downloadLemmatronJSONData(forInflectedWord inflectedWord: String, forLanguage language: OxfordAPILanguage, andWithFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter]?){
         
         let apiRequest = OxfordLemmatronAPIRequest(withInflectedWord: inflectedWord, withFilters: filters, withQueryLanguage: language)
+        
+        print("The url string for this api request is: \(apiRequest.getURLString())")
         
         let urlRequest = apiRequest.generateURLRequest()
         
@@ -95,7 +125,9 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
     
     func downloadExampleSentencesJSONData(forWord word: String){
         
-        let apiRequest = OxfordAPIRequest(withWord: word, withDictionaryEntryFilter: .sentences)
+        let apiRequest = OxfordSentencesAPIRequest(withQueryWord: word)
+        
+        print("The url string for this request is: \(apiRequest.getURLString())")
         
         let urlRequest = apiRequest.generateURLRequest()
         
@@ -116,6 +148,8 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
     func downloadThesaurusJSONData(forWord word: String, withAntonyms isAntonymRequest: Bool, withSynonyms isSynonymRequest: Bool){
         
         let apiRequest = OxfordThesaurusAPIRequest(withWord: word, isAntonymRequest: isAntonymRequest, isSynonymRequest: isSynonymRequest)
+        
+        print("The url string generated from this api request is: \(apiRequest.getURLString())")
         
         let urlRequest = apiRequest.generateURLRequest()
         

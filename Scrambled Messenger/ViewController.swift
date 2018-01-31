@@ -66,7 +66,9 @@ class ViewController: UIViewController {
 
        /** DictionaryAPIClient.getJSONDictionaryForWord(word: "love") **/
         
-        OxfordAPIClient.sharedClient.downloadAPIUtilityRequestJSONData(forRESTEndpoint: .filters, andWithTargetLanguage: nil, andWithEndpointForAllFiltersRequest: .entries)
+        OxfordAPIClient.sharedClient.getLemmatronJSONData(forInflectedWord: "loving", forLanguage: .English)
+        
+        OxfordAPIClient.sharedClient.getLemmatronJSONData(forInflectedWord: "eating", forLanguage: .English, forLexicalCategories: [.verb], forGrammaticalFeatures: [])
     
         
     }

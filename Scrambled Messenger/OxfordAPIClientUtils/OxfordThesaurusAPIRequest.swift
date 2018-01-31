@@ -26,6 +26,23 @@ class OxfordThesaurusAPIRequest: OxfordAPIRequest{
     }
     /** Appends the Thesaurus query parameters to the ULR string; **/
     
+    
+    override func getURLString() -> String {
+        
+        var urlString = self.baseURLString
+        
+        urlString  = getURLStringFromAppendingEndpointSpecifier(relativeToURLString: urlString)
+        
+        urlString = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: urlString)
+        
+        urlString = getURLStringFromAppendingQueryWord(relativeToURLString: urlString)
+        
+        urlString = getURLStringFromAppendingThesaurusQueryParameters(relativeToURLString: urlString)
+        
+        
+        return urlString
+    }
+    
     private func getURLStringFromAppendingThesaurusQueryParameters(relativeToURLString urlString: String) -> String{
         
         

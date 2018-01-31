@@ -14,21 +14,22 @@ class OxfordSentencesAPIRequest: OxfordAPIRequest{
    init(withQueryWord queryWord: String) {
     
         super.init(withQueryWord: queryWord, andWithLanguage: .English)
+        self.endpoint = .entries
     
     }
     
     override func getURLString() -> String {
         
-        var baseURLString = self.baseURLString
+        var urlString = self.baseURLString
         
         
-        var urlStr = getURLStringFromAppendingEndpointSpecifier(relativeToURLString: baseURLString)
+        urlString = getURLStringFromAppendingEndpointSpecifier(relativeToURLString: urlString)
 
-        urlStr = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: baseURLString)
+        urlString = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: urlString)
         
-        urlStr = getURLStringFromAppendingQueryWord(relativeToURLString: urlStr)
+        urlString = getURLStringFromAppendingQueryWord(relativeToURLString: urlString)
         
-        return urlStr.appending("sentences")
+        return urlString.appending("sentences")
         
     }
 }
