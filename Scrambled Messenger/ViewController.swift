@@ -66,29 +66,9 @@ class ViewController: UIViewController {
 
        /** DictionaryAPIClient.getJSONDictionaryForWord(word: "love") **/
         
+        OxfordAPIClient.sharedClient.downloadAPIUtilityRequestJSONData(forRESTEndpoint: .filters, andWithTargetLanguage: nil, andWithEndpointForAllFiltersRequest: .entries)
+    
         
-        let wordlistRequest = OxfordWordlistAPIRequest(withSourceLanguage: .English, withDomainFilters: [OxfordAPIEndpoint.OxfordAPIFilter.domains([
-                OxfordDomain.air_force.rawValue,
-                OxfordDomain.amerindian.rawValue,
-                OxfordDomain.alcoholic.rawValue,
-                OxfordDomain.biblical.rawValue
-            ])], withRegionFilters: [
-                OxfordAPIEndpoint.OxfordAPIFilter.regions([
-                    OxfordRegion.us.rawValue
-                ])
-            ], withRegisterFilters: [
-                
-            ], withTranslationsFilters: [
-            
-            ], withLexicalCategoryFilters: [
-            
-            ])
-        
-        let urlString = wordlistRequest.getURLString()
-        
-        print(urlString)
-        
-        OxfordAPIClient.sharedClient.getWordListJSONData(forSourceLanguage: .English, forDomainFilters: [.anatomy], forRegionFilters: [], forRegisterFilters: [], forLexicalCategoryFilters: [])
     }
     
     

@@ -206,26 +206,49 @@ class OxfordAPIRequest{
         })
         
         
-        repeat{
-            
-            if(urlString.last! == ";"){
-                urlString.removeLast()
-            }
-            
-        }while(urlString.last! == ";")
+        if let lastChar = urlString.last, lastChar == ";"{
+            urlString.removeLast()
+        }
+       
         
     }
     
     
-    func appendStringArrayElementsToURLString(fromStringArray stringArray: [String],toCurrentURLString urlString: inout String){
+    func appendStringArrayElementsToURLString(forQueryParameter queryParameter: String, forParameterValues parameterValues: [String],toCurrentURLString urlString: inout String){
         
-        var concatenatedString = stringArray.reduce(String(), { $0.appending("\($1),")})
-        concatenatedString.removeLast()
-        concatenatedString.append(";")
         
+        var queryString = "\(queryParameter)="
+            
+        var paramValueStr = parameterValues.reduce(String(), { $0.appending("\($1),")})
+        paramValueStr.removeLast()
+        paramValueStr.append(";")
+        
+        queryString.append(paramValueStr)
+        
+        urlString = urlString.appending(queryString)
+    }
+    
+    
+    
+    
+    func appendStringToURLString(forQueryParameter queryParameter: String, usingParameterValue parameterValue: String,toCurrentURLString urlString: inout String){
+        
+        
+        let concatenatedString = "\(queryParameter)=\(parameterValue);"
+       
         urlString = urlString.appending(concatenatedString)
     }
     
+    
+    func appendBooleanToURLString(forQueryParameter queryParameter: String, usingParameterValue parameterValue: Bool,toCurrentURLString urlString: inout String){
+        
+        
+        let parameterValString = parameterValue ? "true" : "false";
+        
+        let concatenatedString = "\(queryParameter)=\(parameterValString);"
+        
+        urlString = urlString.appending(concatenatedString)
+    }
     
     //MARK: *****   Helper Functions for Building URLRequest String
     

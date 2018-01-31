@@ -41,74 +41,63 @@ class OxfordUtilityAPIRequest: OxfordAPIRequest{
     
     override func getURLString() -> String {
         
-        var baseURL = self.baseURLString
+        var baseURLStr = self.baseURLString
         
-        baseURL = getURLStringFromAppendingUtilityRequestEndpoint(relativeToURLString: baseURL)
+        appendUtilityRequestEndpoint(relativeToURLString: &baseURLStr)
         
         switch utilityRequestEndpoint {
         case .domains:
-            baseURL = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: baseURL)
-            if let targetLanguage = self.targetLanguage{
-                baseURL = getURLStringFromAppendingTargetLanguageSpecifier(relativeToURLString: baseURL)
-            }
-
+            appendSourceLanguageSpecifier(relativeToURLString: &baseURLStr)
+            appendTargetLanguageSpecifier(relativeToURLString: &baseURLStr)
             break
         case .registers:
-            baseURL = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: baseURL)
-            if let targetLanguage = self.targetLanguage{
-                baseURL = getURLStringFromAppendingTargetLanguageSpecifier(relativeToURLString: baseURL)
-            }
+            appendSourceLanguageSpecifier(relativeToURLString: &baseURLStr)
+            appendTargetLanguageSpecifier(relativeToURLString: &baseURLStr)
             break
         case .regions,.grammaticalFeatures,.lexicalcategories:
-            baseURL = getURLStringFromAppendingLanguageSpecifier(relativeToURLString: baseURL)
+            appendSourceLanguageSpecifier(relativeToURLString: &baseURLStr)
             break
         case .filters:
-            if let endpointForAllFiltersRequest = self.endpointForAllFiltersRequest{
-                baseURL = getURLStringFromAppendingEndpointForAllFiltersRequest(relativeToURLString: baseURL)
-
-            }
-
+            appendEndpointForAllFiltersRequest(relativeToURLString: &baseURLStr)
             break
         default:
             break
         }
-        return String()
-    }
-    
-    func getURLStringFromAppendingEndpointForAllFiltersRequest(relativeToURLString urlString: String) -> String{
         
-        if(self.endpointForAllFiltersRequest == nil){
-            
-            print("Error: A target language was not specified for this API Request - As a result, the source language will therefore be used in place of the target language.  Please make sure to pass in a value for the target language during initialization")
-            
-            /** Remove the final forward slash **/
-            var tempStr = urlString
-            
-            tempStr.removeLast()
-            
-            return urlString
+        if let lastChar = baseURLStr.last, lastChar == "/"{
+            baseURLStr.removeLast()
         }
         
-        return urlString.appending("\(self.endpointForAllFiltersRequest!.rawValue)/")
+        return baseURLStr
     }
     
-    func getURLStringFromAppendingTargetLanguageSpecifier(relativeToURLString urlString: String) -> String{
+    
+    func appendSourceLanguageSpecifier(relativeToURLString urlString: inout String){
         
-        if(self.targetLanguage == nil){
-            print("Error: A target language was not specified for this API Request - As a result, the source language will therefore be used in place of the target language.  Please make sure to pass in a value for the target language during initialization")
+        urlString.append("\(self.language.rawValue)/")
+    }
+    
+    func appendEndpointForAllFiltersRequest(relativeToURLString urlString: inout String){
+        
+        if let endpointStr = self.endpointForAllFiltersRequest{
             
-            self.targetLanguage = self.language
+            urlString.append("\(endpointStr)/")
         }
-        
-        return urlString.appending("\(self.targetLanguage!.rawValue)/")
     }
     
-    private func getURLStringFromAppendingUtilityRequestEndpoint(relativeToURLString urlString: String) -> String{
-        
-        
-        return urlString.appending("\(self.utilityRequestEndpoint.rawValue)/")
-        
-        
+    func appendTargetLanguageSpecifier(relativeToURLString urlString: inout String){
+        if(self.targetLanguage != nil){
+            
+            urlString.append("\(self.targetLanguage!.rawValue)/")
+        }
     }
+    
+    
+    
+    func appendUtilityRequestEndpoint(relativeToURLString urlString: inout String){
+        
+        urlString.append("\(self.utilityRequestEndpoint.rawValue)/")
+    }
+   
 
 }

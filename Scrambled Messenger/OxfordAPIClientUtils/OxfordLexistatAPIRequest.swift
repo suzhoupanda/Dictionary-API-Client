@@ -146,7 +146,7 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
     
     private func getLexistatsURLString() -> String{
         
-        let baseURLString = OxfordAPIRequest.baseURLString.appending("/")
+        let baseURLString = OxfordAPIRequest.baseURLString
         
         let endpointStr = self.endpoint.rawValue.appending("/")
         
@@ -160,19 +160,20 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
             
             if let lemmas = self.lemmas{
                 
-                appendStringArrayElementsToURLString(fromStringArray: lemmas, toCurrentURLString: &nextStr)
-                
+                appendStringArrayElementsToURLString(forQueryParameter: "lemma", forParameterValues: lemmas, toCurrentURLString: &nextStr)
+          
             }
             
             if let wordforms = self.wordforms{
                 
-                appendStringArrayElementsToURLString(fromStringArray: wordforms, toCurrentURLString: &nextStr)
-                
+               appendStringArrayElementsToURLString(forQueryParameter: "wordform", forParameterValues: wordforms, toCurrentURLString: &nextStr)
+
             }
             
             if let trueCases = self.trueCases{
                 
-                appendStringArrayElementsToURLString(fromStringArray: trueCases, toCurrentURLString: &nextStr)
+                appendStringArrayElementsToURLString(forQueryParameter: "trueCase", forParameterValues: trueCases, toCurrentURLString: &nextStr)
+
                 
             }
             
@@ -180,19 +181,27 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
                 
                 if let collateOptions = self.collateOptions{
                     
-                    let stringArray = collateOptions.map({$0.rawValue})
-                    appendStringArrayElementsToURLString(fromStringArray: stringArray, toCurrentURLString: &nextStr)
+                   appendCollateOptionsToURLString(usingParameterValues: collateOptions, toCurrentURLString: &nextStr)
+
                 }
                 
                 if let sortOptions = self.sortOptions{
-                    let stringArray = sortOptions.map({$0.rawValue})
-                    appendStringArrayElementsToURLString(fromStringArray: stringArray, toCurrentURLString: &nextStr)
+                    
+                    appendSortOptionsToURLString(usingParameterValues: sortOptions, toCurrentURLString: &nextStr)
+
                 }
             }
             
             if let allFilters = self.filters{
                 
                 addFilters(filters: allFilters, toURLString: &nextStr)
+                
+            }
+            
+            if let lastChar = nextStr.last, lastChar == ";" {
+                
+                
+                nextStr.removeLast()
                 
             }
             
@@ -219,24 +228,23 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
         
         if let filterTokens = self.filterTokens{
             
-            appendStringArrayElementsToURLString(fromStringArray: filterTokens, toCurrentURLString: &nextStr)
-            
-            
+            appendStringArrayElementsToURLString(forQueryParameter: "tokens", forParameterValues: filterTokens, toCurrentURLString: &nextStr)
+
         }
         
         if let otherTokens = self.otherContainedTokens{
-            
-            appendStringArrayElementsToURLString(fromStringArray: otherTokens, toCurrentURLString: &nextStr)
+        
+            appendStringArrayElementsToURLString(forQueryParameter: "contains", forParameterValues: otherTokens, toCurrentURLString: &nextStr)
+
             
         }
         
-        nextStr = nextStr.appending("\(self.tokenReturnFormat.rawValue);")
         
-        let shouldIncludePunctuationFlagStr = self.shouldLookUpPunctuationForNGrams ? "true" : "false"
+        appendStringToURLString(forQueryParameter: "format", usingParameterValue: self.tokenReturnFormat.rawValue, toCurrentURLString: &nextStr)
         
-        nextStr = nextStr.appending("\(shouldIncludePunctuationFlagStr);")
-        
-        
+        appendBooleanToURLString(forQueryParameter: "punctuation", usingParameterValue: self.shouldLookUpPunctuationForNGrams, toCurrentURLString: &nextStr)
+
+
         
         if let allFilters = self.filters{
             
@@ -244,7 +252,32 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
             
         }
         
+        if let lastChar = nextStr.last, lastChar == ";"{
+            
+            nextStr.removeLast()
+            
+        }
+        
         return nextStr
+    }
+    
+    
+    
+    func appendSortOptionsToURLString(usingParameterValues parameterValues: [ValidSortOption],toCurrentURLString urlString: inout String){
+        
+        let stringValues = parameterValues.map({$0.rawValue})
+        
+        appendStringArrayElementsToURLString(forQueryParameter: "sort", forParameterValues: stringValues, toCurrentURLString: &urlString)
+        
+    }
+    
+    
+    func appendCollateOptionsToURLString(usingParameterValues parameterValues: [ValidCollateOption],toCurrentURLString urlString: inout String){
+        
+        let stringValues = parameterValues.map({$0.rawValue})
+        
+        appendStringArrayElementsToURLString(forQueryParameter: "collate", forParameterValues: stringValues, toCurrentURLString: &urlString)
+        
     }
     
     
