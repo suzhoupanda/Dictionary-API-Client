@@ -33,6 +33,7 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
     }
     
     
+    
     func getLexistatJSONData(forLemma lemma: String, forTrueCase trueCase: String, forWordForm wordForm: String, withLexicalCategory lexicalCategory: OxfordLexicalCategory?){
         
         let filters = lexicalCategory == nil ? [] : [OxfordAPIEndpoint.OxfordAPIFilter.lexicalCategory([lexicalCategory!.rawValue])]
@@ -46,7 +47,16 @@ class OxfordAPIClient: OxfordDictionaryAPIDelegate{
         self.startDataTask(withURLRequest: urlRequest)
     }
     
-    
+    func getLexistatJSONData(withNGramSize nGramSize: NGramSize, forSearchTokens searchTokens: [String], withOtherTokens otherTokens: [String], includesPunctuationMarks: Bool, withTokenReturnFormat tokenReturnFormat: TokenReturnFormat, forSourceLanguage sourceLanguage: OxfordAPILanguage){
+        
+        let apiRequest = OxfordLexistatAPIRequest(withNGramSize: nGramSize, filterBy: searchTokens, withOtherNGramTokens: otherTokens, withTokenReturnFormat: tokenReturnFormat, shouldLookUpPunctuation: includesPunctuationMarks, andWithOtherFilters: [], forSourceLanguage: sourceLanguage)
+        
+        print("The url generated for this request is: \(apiRequest.getURLString())")
+        
+        let urlRequest = apiRequest.generateURLRequest()
+        
+        self.startDataTask(withURLRequest: urlRequest)
+    }
     
     
     func getLemmatronJSONData(forInflectedWord inflectedWord: String, forLanguage language: OxfordAPILanguage){

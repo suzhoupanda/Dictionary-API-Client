@@ -119,7 +119,7 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
     
     /** Initializer for querying the LexiStat ngram endpoint, which returns the frequencies of ngrams size 1-4. Include validation for the number of ngrams **/
     
-    init(withLemma lemma: String, withNGramSize ngram_size: NGramSize, filterBy filterTokens: [String], withOtherNGramTokens otherNGramTokens: [String], withTokenReturnFormat tokenReturnFormat: TokenReturnFormat, shouldLookUpPunctuation: Bool, andWithOtherFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter], forSourceLanguage sourceLanguage: OxfordAPILanguage){
+    init(withNGramSize ngram_size: NGramSize, filterBy filterTokens: [String], withOtherNGramTokens otherNGramTokens: [String], withTokenReturnFormat tokenReturnFormat: TokenReturnFormat, shouldLookUpPunctuation: Bool, andWithOtherFilters filters: [OxfordAPIEndpoint.OxfordAPIFilter], forSourceLanguage sourceLanguage: OxfordAPILanguage){
         
         super.init(withQueryWord: String(), andWithLanguage: sourceLanguage)
         
@@ -158,19 +158,19 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
             
         } else  {
             
-            if let lemmas = self.lemmas{
+            if let lemmas = self.lemmas, !lemmas.isEmpty{
                 
                 appendStringArrayElementsToURLString(forQueryParameter: "lemma", forParameterValues: lemmas, toCurrentURLString: &nextStr)
           
             }
             
-            if let wordforms = self.wordforms{
+            if let wordforms = self.wordforms, !wordforms.isEmpty{
                 
                appendStringArrayElementsToURLString(forQueryParameter: "wordform", forParameterValues: wordforms, toCurrentURLString: &nextStr)
 
             }
             
-            if let trueCases = self.trueCases{
+            if let trueCases = self.trueCases, !trueCases.isEmpty{
                 
                 appendStringArrayElementsToURLString(forQueryParameter: "trueCase", forParameterValues: trueCases, toCurrentURLString: &nextStr)
 
@@ -179,13 +179,13 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
             
             if(self.endpoint == .stats_words_frequency){
                 
-                if let collateOptions = self.collateOptions{
+                if let collateOptions = self.collateOptions, !collateOptions.isEmpty{
                     
                    appendCollateOptionsToURLString(usingParameterValues: collateOptions, toCurrentURLString: &nextStr)
 
                 }
                 
-                if let sortOptions = self.sortOptions{
+                if let sortOptions = self.sortOptions, !sortOptions.isEmpty{
                     
                     appendSortOptionsToURLString(usingParameterValues: sortOptions, toCurrentURLString: &nextStr)
 
@@ -226,13 +226,13 @@ class OxfordLexistatAPIRequest: OxfordAPIRequest{
         
         var nextStr = modifiedURLStr.appending(ngramStr)
         
-        if let filterTokens = self.filterTokens{
+        if let filterTokens = self.filterTokens, !filterTokens.isEmpty{
             
             appendStringArrayElementsToURLString(forQueryParameter: "tokens", forParameterValues: filterTokens, toCurrentURLString: &nextStr)
 
         }
         
-        if let otherTokens = self.otherContainedTokens{
+        if let otherTokens = self.otherContainedTokens, !otherTokens.isEmpty{
         
             appendStringArrayElementsToURLString(forQueryParameter: "contains", forParameterValues: otherTokens, toCurrentURLString: &nextStr)
 
